@@ -29,6 +29,16 @@ export async function markVideoCompleted(
     return { error: 'ログインが必要です' }
   }
 
+  // 動画がこのコースに属することを確認（course_id の改ざん防止）
+  const { data: video } = await supabase
+    .from('videos')
+    .select('course_id')
+    .eq('id', videoIdResult.data)
+    .single()
+  if (!video || video.course_id !== courseIdResult.data) {
+    return { error: '動画が見つかりません' }
+  }
+
   const { error } = await supabase
     .from('video_progress')
     .upsert(
@@ -64,6 +74,16 @@ export async function unmarkVideoCompleted(
 
   if (!userId) {
     return { error: 'ログインが必要です' }
+  }
+
+  // 動画がこのコースに属することを確認（course_id の改ざん防止）
+  const { data: video } = await supabase
+    .from('videos')
+    .select('course_id')
+    .eq('id', videoIdResult.data)
+    .single()
+  if (!video || video.course_id !== courseIdResult.data) {
+    return { error: '動画が見つかりません' }
   }
 
   const { error } = await supabase

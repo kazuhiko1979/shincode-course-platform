@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { isCurrentUserAdmin } from '@/lib/auth'
 import { uuidSchema, roleSchema } from '@/lib/schemas'
 
 /**
@@ -13,6 +14,8 @@ export async function setUserRole(
   targetId: string,
   newRole: 'user' | 'admin'
 ): Promise<{ error?: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const idResult = uuidSchema.safeParse(targetId)
   const roleResult = roleSchema.safeParse(newRole)
   if (!idResult.success) return { error: '不正なユーザー ID です' }

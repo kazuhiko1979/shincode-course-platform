@@ -3,6 +3,7 @@
 import { revalidatePath, updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { isCurrentUserAdmin } from '@/lib/auth'
 import { videoFormSchema, uuidSchema, formString, firstError } from '@/lib/schemas'
 
 export type VideoFormState = { error?: string }
@@ -33,6 +34,8 @@ export async function createVideo(
   _prev: VideoFormState,
   formData: FormData
 ): Promise<VideoFormState> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const courseIdResult = uuidSchema.safeParse(formString(formData, 'course_id'))
   if (!courseIdResult.success) return { error: 'コース ID が指定されていません' }
   const courseId = courseIdResult.data
@@ -56,6 +59,8 @@ export async function updateVideo(
   _prev: VideoFormState,
   formData: FormData
 ): Promise<VideoFormState> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const courseIdResult = uuidSchema.safeParse(formString(formData, 'course_id'))
   const idResult = uuidSchema.safeParse(formString(formData, 'id'))
   if (!courseIdResult.success || !idResult.success) return { error: 'ID が指定されていません' }
@@ -65,7 +70,11 @@ export async function updateVideo(
   if (!parsed.success) return { error: firstError(parsed.error) }
 
   const supabase = await createClient()
-  const { error } = await supabase.from('videos').update(parsed.data).eq('id', idResult.data)
+  const { error } = await supabase
+    .from('videos')
+    .update(parsed.data)
+    .eq('id', idResult.data)
+    .eq('course_id', courseId)
 
   if (error) return { error: `更新に失敗しました: ${error.message}` }
 
@@ -82,6 +91,8 @@ export async function deleteVideo(
   videoId: string,
   courseId: string
 ): Promise<{ error?: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const videoIdResult = uuidSchema.safeParse(videoId)
   const courseIdResult = uuidSchema.safeParse(courseId)
   if (!videoIdResult.success || !courseIdResult.success) {

@@ -3,6 +3,7 @@
 import { revalidatePath, updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { isCurrentUserAdmin } from '@/lib/auth'
 import { courseFormSchema, uuidSchema, formString, firstError } from '@/lib/schemas'
 
 export type CourseFormState = { error?: string }
@@ -33,6 +34,8 @@ export async function createCourse(
   _prev: CourseFormState,
   formData: FormData
 ): Promise<CourseFormState> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const parsed = parseCourseForm(formData)
   if (!parsed.success) return { error: firstError(parsed.error) }
 
@@ -50,6 +53,8 @@ export async function updateCourse(
   _prev: CourseFormState,
   formData: FormData
 ): Promise<CourseFormState> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const idResult = uuidSchema.safeParse(formString(formData, 'id'))
   if (!idResult.success) return { error: 'コース ID が指定されていません' }
 
@@ -70,6 +75,8 @@ export async function updateCourse(
  * FK の ON DELETE CASCADE により自動削除される。
  */
 export async function deleteCourse(courseId: string): Promise<{ error?: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: '管理者権限が必要です' }
+
   const idResult = uuidSchema.safeParse(courseId)
   if (!idResult.success) return { error: '不正なコース ID です' }
 

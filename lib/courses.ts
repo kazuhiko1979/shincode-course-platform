@@ -29,9 +29,13 @@ export async function getCourses(): Promise<Course[]> {
 
 export type CourseSortKey = 'relevance' | 'newest'
 
-/** ilike のワイルドカード/エスケープ対策（%, _, \ を無効化）して LIKE パターンを作る。 */
+/**
+ * ilike のワイルドカード/エスケープ対策（%, _, \ を無効化）して LIKE パターンを作る。
+ * PostgREST の .or() 構文で区切り文字として解釈される ( ) , も除去する。
+ */
 function likePattern(q: string): string {
-  return `%${q.replace(/[\\%_]/g, (m) => `\\${m}`)}%`
+  const sanitized = q.replace(/[(),]/g, '')
+  return `%${sanitized.replace(/[\\%_]/g, (m) => `\\${m}`)}%`
 }
 
 /**

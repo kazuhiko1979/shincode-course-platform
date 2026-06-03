@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { uuidSchema } from '@/lib/schemas'
 
@@ -32,6 +32,9 @@ export async function enrollCourse(courseId: string): Promise<EnrollResult> {
     return { error: '受講登録に失敗しました' }
   }
 
+  // use cache（getCourses/getCourse）の無効化（受講登録数がコース詳細に影響するため）
+  updateTag('courses')
+  updateTag(`course-${idResult.data}`)
   revalidatePath(`/courses/${idResult.data}`)
   return { success: true }
 }
