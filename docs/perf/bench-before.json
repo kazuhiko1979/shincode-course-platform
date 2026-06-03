@@ -1,0 +1,59 @@
+{
+  "label": "before",
+  "capturedAtNote": "タイムスタンプはファイルのmtimeを参照",
+  "env": {
+    "url": "mdkrrpspzpfystrhstgj"
+  },
+  "config": {
+    "N": 40,
+    "WARMUP": 5,
+    "courseId": "73c61aad-df9e-47bf-9f0e-b3fe9d096aaf",
+    "videoCount": 4
+  },
+  "results": {
+    "ref_single_roundtrip": {
+      "n": 40,
+      "min": 183.85,
+      "median": 219.68,
+      "p95": 330.1,
+      "max": 333.9,
+      "mean": 229.34
+    },
+    "#4_getVideos_by_course": {
+      "n": 40,
+      "min": 52.93,
+      "median": 79.12,
+      "p95": 101.24,
+      "max": 173.79,
+      "mean": 80.38
+    },
+    "#2_getCourse_x1": {
+      "n": 40,
+      "min": 46.36,
+      "median": 81.19,
+      "p95": 150.39,
+      "max": 153.63,
+      "mean": 84.91
+    },
+    "#2_getCourse_x2_sequential": {
+      "n": 40,
+      "min": 115.49,
+      "median": 165.84,
+      "p95": 426.41,
+      "max": 847.14,
+      "mean": 199.57
+    },
+    "#3_gotrue_roundtrip": {
+      "n": 40,
+      "min": 46.73,
+      "median": 69.82,
+      "p95": 108,
+      "max": 180.9,
+      "mean": 74.01
+    }
+  },
+  "derived": {
+    "dup_query_overhead_ms_median": 84.65,
+    "auth_roundtrip_ms_median": 69.82
+  }
+}

@@ -24,6 +24,12 @@
 .DS_Store
 *.pem
 
+# MCP config (contains access tokens)
+.mcp.json
+
+# Windows / WSL download metadata
+*:Zone.Identifier
+
 # debug
 npm-debug.log*
 yarn-debug.log*
