@@ -303,7 +303,7 @@ ISRやCDNを使う場合、`Set-Cookie` ヘッダーを含むレスポンスが�
 | 認可（更新・削除前の権限確認 / WHERE 句） | ⚠️ | 現状は DB の RLS / RPC 権限が真の境界。`app/admin/.../actions.ts` 側では管理者再確認をほぼしていないため、公開前に実 DB の policy / grant / function 権限を再確認する |
 | Cookie 属性（`HttpOnly` / `Secure` / `SameSite`） | ✅ | `@supabase/ssr` の認証 Cookie に依存。独自に機微情報を非 HttpOnly Cookie や `localStorage` に保存しない。独自 Cookie を追加する場合は `__Host-` か `__Secure-` 接頭辞を優先 |
 | CSRF / クロスサイト POST 対策 | ⚠️ | state-changing endpoint で `GET` を使わないことに加え、`Origin` / `Sec-Fetch-Site` 検証、またはフレームワーク組み込み保護の確認を行う。特に logout・role変更・作成/更新/削除系は公開前に実機確認 |
-| **HTTP セキュリティヘッダー** | ⚠️ | **未設定**。`next.config.ts` の `headers()` で付与する（下記）。最優先ギャップ |
+| **HTTP セキュリティヘッダー** | ✅ | `next.config.ts` の `headers()` で全ルートに付与済み（HSTS・X-Content-Type-Options・CSP frame-ancestors・X-Frame-Options・Referrer-Policy・Permissions-Policy） |
 | 機微操作の再認証（退会・メール変更など） | — | 現状は role 変更のみ（admin 操作）。退会/メール変更機能なし |
 | 秘密情報の非コミット | ✅ | `.env*` は gitignore。リポジトリは publishable key のみ（service_role 無し） |
 | SECURITY DEFINER 関数の公開実行権限 | ⚠️ | repo 内に migration SQL が無く、`admin_*`/`is_admin`/`handle_new_user` に `REVOKE EXECUTE ... FROM PUBLIC` 済みかをコードだけでは保証できない。公開前に実 DB で確認 |
