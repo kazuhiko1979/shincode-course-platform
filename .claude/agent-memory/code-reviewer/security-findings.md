@@ -1,46 +1,61 @@
 ---
 name: security-findings
-description: Confirmed security gaps found during the 2026-06-03 initial full-codebase review — these are known open issues
+description: Confirmed security gaps found during code reviews — updated after 2026-06-05 セキュリティ強化 commit
 metadata:
   type: project
 ---
 
-# Security Findings — Initial Review (2026-06-03)
+# Security Findings — Updated 2026-06-05
 
-## Critical / High
+## Resolved in commit 597e880 (セキュリティ強化)
 
-### 1. HTTP Security Headers — MISSING (CLAUDE.md acknowledges this)
-`next.config.ts` has no `headers()` configuration. All recommended headers are absent:
-- `Strict-Transport-Security`
+### RESOLVED: HTTP Security Headers
+`next.config.ts` now includes all recommended headers via `securityHeaders` array:
 - `X-Content-Type-Options: nosniff`
-- `Content-Security-Policy` (even `frame-ancestors 'none'` minimum)
-- `Referrer-Policy`
-- `Permissions-Policy`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Strict-Transport-Security: max-age=63072000; includeSubDomains`
+- `Content-Security-Policy: frame-ancestors 'none'`
+- `X-Frame-Options: DENY`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
 
-**Status:** Listed as `⚠️` in CLAUDE.md checklist. This is the highest-priority gap before public launch.
+### RESOLVED: Server Actions without admin re-verification
+All admin Server Actions now call `isCurrentUserAdmin()` at the top of each action:
+- `app/admin/(protected)/courses/actions.ts` — `createCourse`, `updateCourse`, `deleteCourse`
+- `app/admin/(protected)/courses/[id]/videos/actions.ts` — `createVideo`, `updateVideo`, `deleteVideo`
+- `app/admin/(protected)/users/actions.ts` — `setUserRole`
 
-### 2. Server Actions without admin re-verification
-`app/admin/(protected)/courses/actions.ts`, `app/admin/(protected)/courses/[id]/videos/actions.ts`, and `app/admin/(protected)/users/actions.ts` do NOT call `isAdminById()` or `getClaims()` before performing DB mutations. They rely entirely on the layout-level and middleware-level guard.
+### RESOLVED: course_id injection in updateVideo
+`updateVideo` now includes `.eq('course_id', courseId)` to prevent updating a video that belongs to a different course than specified.
 
-This means: if someone bypasses the layout (e.g., calling the Server Action directly from a crafted client), there is no server-side admin check in the action itself. The layout guard does NOT protect direct Server Action invocations.
+### RESOLVED: course_id ownership check in video_progress actions
+`markVideoCompleted` and `unmarkVideoCompleted` now verify the video belongs to the specified course before writing to `video_progress`. Prevents course_id tampering.
 
-**Risk level:** Medium-High. Layout guards do not protect Server Actions called directly.
+### RESOLVED: .or() injection in searchCourses
+`likePattern()` in `lib/courses.ts` now strips `(`, `)`, `,` before building the `.or()` filter string.
 
-### 3. CSRF on logout route
-`app/auth/logout/route.ts` is a POST-only route — correct. But CLAUDE.md flags that `Origin`/`Sec-Fetch-Site` header verification is not implemented. The UserMenu uses a `<form method="POST">` which is CSRF-safe for same-origin, but this should be confirmed.
+## Still Open
 
-### 4. Auto-enroll via GET callback parameter (enroll param)
-`app/auth/callback/route.ts` reads `enroll` query param and calls `enrollCourse(enroll)`. The `enrollCourse` action validates the UUID, but the `enroll` param is passed through the OAuth callback URL which could be tampered. The UUID validation in `enrollCourse` is the only guard.
+### 1. deleteVideo missing .eq('course_id', courseId) — NEW gap
+`app/admin/(protected)/courses/[id]/videos/actions.ts` line 103:
+`supabase.from('videos').delete().eq('id', videoIdResult.data)` — does NOT include `.eq('course_id', courseIdResult.data)`.
+`updateVideo` got the fix but `deleteVideo` did not. A crafted call with a valid videoId for a different course can still delete that video (admin-only operation, so risk is low but the fix is simple).
 
-### 5. searchCourses .or() injection (low — public table)
-`lib/courses.ts` `searchCourses()` escapes `%`, `_`, `\` in the ilike pattern but builds the `.or()` filter as a string. Supabase's `.or()` with a string argument could be susceptible to injection via comma/parenthesis characters. CLAUDE.md acknowledges this with "影響小" (low impact) since it's a public table.
+### 2. CSRF on state-changing endpoints
+`Origin`/`Sec-Fetch-Site` verification not implemented for admin actions. CLAUDE.md flags this.
 
-## Known / Acknowledged Gaps (from CLAUDE.md checklist)
-- SECURITY DEFINER function grants not verifiable from code (must check actual DB)
-- Rate limiting absent on search, login flow
-- `/search` page missing `noindex` robots meta
-- OGP images not set
-- XML sitemap not created
-- Bundle analysis not done
+### 3. SECURITY DEFINER function grants
+`admin_*`/`is_admin`/`handle_new_user` — `REVOKE EXECUTE FROM PUBLIC` not verifiable from code. Needs actual DB check.
 
-**How to apply:** When reviewing new code that touches admin actions, always check for server-side admin re-verification. When reviewing `next.config.ts` changes, check if headers were added.
+### 4. Rate limiting absent
+No IP/user-level rate limiting on search, login flow, or admin mutations.
+
+### 5. /search page missing noindex
+`/search` and result pages lack `robots: { index: false }`.
+
+### 6. OGP images not set
+`openGraph`/`twitter` images missing.
+
+### 7. XML sitemap not created
+`app/sitemap.ts` does not exist.
+
+**How to apply:** When reviewing new code that touches admin actions, always check for server-side admin re-verification AND that DELETE/UPDATE queries include ownership constraints (course_id, user_id) alongside the primary ID. When reviewing `next.config.ts` changes, verify headers remain present.

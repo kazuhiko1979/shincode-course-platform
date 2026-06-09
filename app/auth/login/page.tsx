@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { safeRedirectPath, defaultPathForCurrentUser } from '@/lib/auth'
 import { enrollCourse } from '@/app/courses/[id]/actions'
+import Link from 'next/link'
 import GoogleLoginButton from './GoogleLoginButton'
 
 export default async function LoginPage({
@@ -48,6 +49,18 @@ export default async function LoginPage({
           <span className="text-[#5022c3] font-medium">利用規約</span> および{' '}
           <span className="text-[#5022c3] font-medium">プライバシーポリシー</span> に同意したものとみなされます。
         </p>
+
+        <div className="mt-6 pt-6 border-t border-[#d1d7dc] text-center">
+          <p className="text-sm text-[#6a6f73]">
+            アカウントをお持ちでない方は{' '}
+            <Link
+              href={next ? `/auth/signup?next=${encodeURIComponent(next)}` : '/auth/signup'}
+              className="text-[#5022c3] font-medium hover:underline"
+            >
+              無料登録
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )

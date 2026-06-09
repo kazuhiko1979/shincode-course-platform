@@ -27,6 +27,9 @@
 # MCP config (contains access tokens)
 .mcp.json
 
+# Serena MCP internal data
+.serena/
+
 # Windows / WSL download metadata
 *:Zone.Identifier
 
