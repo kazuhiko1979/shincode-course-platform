@@ -7,6 +7,7 @@ import CourseCard from '@/components/CourseCard'
 
 export const metadata: Metadata = {
   title: 'コース検索 | ShinCode Courses',
+  robots: { index: false },
 }
 
 type SearchParams = Promise<{ q?: string; sort?: string }>
