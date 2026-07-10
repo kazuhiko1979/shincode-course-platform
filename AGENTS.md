@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Review guidelines
 
-このリポジトリのコードレビュー基準。重要度順（Critical → High → Medium → Low）に、根拠とともに具体的な該当箇所（`file:line`）を挙げること。詳細な規約は `CLAUDE.md` と `.claude/rules/` を参照。
+このリポジトリのコードレビュー基準。重要度順（Critical → High → Medium → Low）に、根拠とともに具体的な該当箇所（`file:line`）を挙げること。詳細な規約は `CLAUDE.md` を参照。
 
 ### セキュリティ（最優先）
 
