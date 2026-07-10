@@ -100,7 +100,11 @@ export async function deleteVideo(
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.from('videos').delete().eq('id', videoIdResult.data)
+  const { error } = await supabase
+    .from('videos')
+    .delete()
+    .eq('id', videoIdResult.data)
+    .eq('course_id', courseIdResult.data)
 
   if (error) return { error: `削除に失敗しました: ${error.message}` }
 
