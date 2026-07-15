@@ -206,7 +206,10 @@ M3 は影＋（ダークでは）サーフェスの明度上げで表現。こ�
   --text-title-medium: 1rem;        --text-title-medium--line-height: 1.5rem;
   --text-body-large: 1rem;          --text-body-large--line-height: 1.5rem;
   --text-body-medium: 0.875rem;     --text-body-medium--line-height: 1.25rem;
+  --text-body-small: 0.75rem;       --text-body-small--line-height: 1rem;
   --text-label-large: 0.875rem;     --text-label-large--line-height: 1.25rem;
 }
 ```
+
+> テキストフィールドのラベル等で `text-body-small` を使う（`references/components.md`）。上記の貼り付け用ブロックには `--text-body-small` を含めてあるが、**必要な役割だけ抜粋して配線する場合は使用するトークンを漏らさないこと**——`@theme` に無い `text-*` クラスは Tailwind v4 が生成せず無言で no-op になり、フォントサイズが継承値のままになる。
 </content>
