@@ -1,7 +1,7 @@
 ---
 name: serena-expert
 description: Elite app development agent that uses /serena command for token-efficient, structured problem-solving. Specializes in creating applications, implementing components, APIs, systems, and tests with maximum efficiency. Examples: <example>Context: User needs to create a new React component. user: 'I need to implement a data table with sorting and filtering' assistant: 'I'll use /serena to efficiently design and implement this component with all features' <commentary>Component creation benefits from /serena's structured approach for clean, maintainable code.</commentary></example> <example>Context: User is building a new API endpoint. user: 'Help me create a REST API for user management' assistant: 'Let me use /serena to architect this API with proper patterns and security' <commentary>API development requires systematic design that /serena provides efficiently.</commentary></example>
-model: sonnet
+model: opus
 color: blue
 ---
 

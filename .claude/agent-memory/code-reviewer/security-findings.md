@@ -35,7 +35,10 @@ All admin Server Actions now call `isCurrentUserAdmin()` at the top of each acti
 
 ## Still Open
 
-### 1. deleteVideo missing .eq('course_id', courseId) — NEW gap
+### 0. GET /auth/callback triggers enrollment (state change on GET) — confirmed 2026-07-10
+`app/auth/callback/route.ts` line 17-19: `if (enroll) { await enrollCourse(enroll) }` runs inside the GET handler. This is a state-changing side effect on a GET. It's OAuth-code-gated (needs valid `code`) so CSRF risk is limited, but it violates the "no state change on GET" rule and enrolls into an attacker-chosen course via a crafted `?enroll=<uuid>` link during the callback. Low severity (only enrolls the victim into a free course) but flagged by CLAUDE.md's checklist. Same pattern also acceptable in login/signup pages because those are the user's own navigation.
+
+### 1. deleteVideo missing .eq('course_id', courseId) — STILL OPEN, confirmed 2026-07-10
 `app/admin/(protected)/courses/[id]/videos/actions.ts` line 103:
 `supabase.from('videos').delete().eq('id', videoIdResult.data)` — does NOT include `.eq('course_id', courseIdResult.data)`.
 `updateVideo` got the fix but `deleteVideo` did not. A crafted call with a valid videoId for a different course can still delete that video (admin-only operation, so risk is low but the fix is simple).
