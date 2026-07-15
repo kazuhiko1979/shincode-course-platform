@@ -1,0 +1,17 @@
+{
+  "skill_name": "material-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Material Design 3 に準拠したログインフォームのカードを React + Tailwind で作って。メールアドレスとパスワードのテキストフィールド、filled のログインボタン、text スタイルの「パスワードをお忘れですか？」リンクを含めて。",
+      "expected_output": "M3 トークン（surface-container / on-surface / primary / on-primary など）を使い、カード=rounded-m3、ボタン=rounded-full+label-large、テキストフィールド=filledの下線スタイル。ライト/ダーク対応、フォーカスリング、48pxタッチターゲット。インラインstyle不使用、Tailwindのみ。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "コース一覧に置く Material 3 の elevated カードを作って。サムネイル画像、タイトル(title-large)、講師名(body-medium)、右下に受講登録用の tonal ボタン。next/image と Link を使うこと。",
+      "expected_output": "elevated カード(shadow-m3-1, surface-container-low, rounded-m3-md)、next/image でサムネ、tonal ボタン(secondary-container/on-secondary-container)、タイポは title-large/body-medium トークン。",
+      "files": []
+    }
+  ]
+}
