@@ -86,13 +86,24 @@ YouTubeにアップロードした動画をUdemyライクな講座プラット�
 ## Commands
 
 ```bash
-npm run dev      # start dev server at http://localhost:3000
-npm run build    # production build
-npm run start    # start production server
-npm run lint     # run ESLint
+npm run dev        # start dev server at http://localhost:3000
+npm run build      # production build（型チェックも兼ねる）
+npm run start      # start production server
+npm run lint       # run ESLint
+npm run typecheck  # tsc --noEmit（型チェックのみ・高速）
+npm run verify     # lint → typecheck → build を一括実行（完了前に必ず通す）
 ```
 
-No test runner is configured.
+No test runner is configured. 代わりに **`npm run verify`** を「テストを必ず実行する」の正規ゲートとして使う（完了主張の前に実行し、出力を提示する）。CI（`.github/workflows/ci.yml`）でも PR / main push 時に同等の検証が走る。
+
+### その他のコマンド
+
+```bash
+node scripts/perf-bench.mjs   # 主要ページの簡易パフォーマンス計測
+```
+
+- **push は `/push-review` 経由**（code / security / performance の3レビュアーを並列実行し、ブロッカーが無ければ push）。`git push` の直叩き・`--force` は禁止。詳細は `.claude/commands/push-review.md`。
+- エージェント作業時の安全ルール（変更禁止ゾーン・spec-first・最小差分・検証義務・Git 安全則）は `AGENTS.md` の「エージェント作業の安全ルール」を参照。
 
 ## コーディング規約
 
