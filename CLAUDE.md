@@ -1,6 +1,9 @@
 @AGENTS.md
-@.claude/rules/backend/patterns.md
-@.claude/rules/frontend/patterns.md
+
+> **ルールの読み込み方針**：`.claude/rules/backend/patterns.md`・`.claude/rules/frontend/patterns.md` は
+> フロントマターの `paths:`（glob）による **path-specific rules**（Claude Code ネイティブ機能）。
+> 該当ファイルを操作する時だけ自動でコンテキストに読み込まれる（Select 戦略）。
+> `@import` で常時読み込みにはしない（二重ロード・コンテキスト浪費を避けるため）。
 
 ## 進捗管理（重要・必須）
 
