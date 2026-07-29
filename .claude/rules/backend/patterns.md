@@ -2,7 +2,9 @@
 paths:
   - "lib/**/*.ts"
   - "app/**/actions.ts"
+  - "app/**/route.ts"
   - "proxy.ts"
+  - "next.config.ts"
 ---
 
 ## Supabase SSR クライアント
