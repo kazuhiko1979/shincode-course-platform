@@ -48,3 +48,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source material (large binaries kept locally, not tracked)
+docs/*.pdf

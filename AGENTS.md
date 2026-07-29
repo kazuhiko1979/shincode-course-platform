@@ -105,3 +105,16 @@ AI エージェントが安全に開発するための行動規範。**このフ
 ## 検証   … 実行したコマンドと結果（npm run verify の出力、3ロール確認 等）
 ## スコープ外 … あえてやらなかったこと・別チケット送りにしたこと
 ```
+
+---
+
+## 設計の軸（ハーネス設計ナレッジ）
+
+AI エージェント開発を一過性でなく **資産として蓄積・洗練**するための永続ナレッジを `docs/harness/` に置く。**Rule/Hook/Skill/サブエージェント/評価などハーネス部品を設計・変更する前に参照すること。**
+
+- [`docs/harness/000_index.md`](docs/harness/000_index.md) — 索引と回し方
+- [`docs/harness/01_principles.md`](docs/harness/01_principles.md) — 原則集（W/S/C/I・6制御IF・Hooks・Generator-Evaluator・検証/評価ハーネス）
+- [`docs/harness/02_maturity.md`](docs/harness/02_maturity.md) — 本プロジェクトの成熟度採点・ギャップ・導入ロードマップ
+- [`docs/harness/03_one-pager.md`](docs/harness/03_one-pager.md) — 1枚まとめ
+
+> **設計哲学：AI の凹みに構造を、でっぱりは安心して任せられるように。モデルが進化しても、設計したハーネス構造は資産として永続する。**
