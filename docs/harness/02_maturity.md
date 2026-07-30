@@ -11,16 +11,16 @@
 |---|---|---|---|
 | 1 | コンテキスト4戦略 W/S/C/I | ✅ 3 | Write=`CLAUDE.md`/`AGENTS.md`/`docs/`/`.serena/memories`、Select=`.claude/rules/*`・Skills、Isolate=3 reviewers |
 | 2 | 6制御IF（俯瞰） | 🟡 2 | CLAUDE.md✅ Rules✅ Skills✅ Subagents✅ MCP✅ だが **Hooks が弱い** |
-| 3 | Hooks（決定論的制御） | 🟡 2.5 | **PreToolUse ガードレール導入済み**（`.claude/hooks/validate-*.sh`＋`.claude/settings.json`、[docs/018](../018_pretooluse_guardrails.md)）＝破滅的 rm・force push・git add -A/.・.env ステージ・Supabase 書き込みを `exit 2` で強制ブロック。完了音は Stop hook。PostToolUse（編集後 lint 自動化）は未導入 |
+| 3 | Hooks（決定論的制御） | ✅ 3 | **Pre/Post/Notification すべて導入済み**：PreToolUse ガードレール（[docs/018](../018_pretooluse_guardrails.md)、危険操作を `exit 2` ブロック）＋ PostToolUse lint-on-save（[docs/019](../019_posttooluse_lint_and_notify.md)、編集後 eslint）＋ 共有 Notification 音（`notify.sh`）。設定は `.claude/settings.json`（チーム共有） |
 | 4 | 設計パターン（ルーティング/ACI/投票） | ✅ 2.5 | Rules＝ルーティング✅、投票＝3視点レビュー✅（教材p62の実装そのもの）。ACIは外部MCP依存でカスタム最適化は限定的 |
 | 5 | Generator-Evaluator | 🟡 1.5 | reviewers が生成と分離した評価者として機能✅。但し `sprint-contract.md`/`evaluation-rubric.md` 無し、反復ループも非形式化 |
 | 6 | マルチエージェント | 🟡 2 | ファンアウト・ギャザー＝`/push-review`の3並列✅。オーケストレーター/パイプラインは非形式化 |
 | 7 | 長時間エージェント管理 | 🟡 1.5 | 進捗ファイル＝`docs/`チケット運用✅（更新ルール厳格）。**構造化ハンドオフ文書の規約なし**、`feature_list`型のテストロックなし |
 | 8 | ツール設計（ACI/選択的実装） | 🟡 2 | MCPは外部（supabase/github/playwright）中心でカスタムACIは無し。CLAUDE.mdのコマンド記述は改善済✅ |
-| 9 | 検証ループ | 🟡 2 | **ルールベースは強い**（`npm run verify`＋CI＋reviewers）✅。ビジュアル検証は散発的、LLM-judgeはreviewersで近似 |
+| 9 | 検証ループ | 🟡 2.5 | **ルールベースは強い**（`npm run verify`＋CI＋reviewers）✅。**PostToolUse lint-on-save で編集直後の自動ゲートも追加**（docs/019）。ビジュアル検証は散発的、LLM-judgeはreviewersで近似 |
 | 10 | 評価ハーネス（Tasks/Graders/pass@k） | ⚠️ 0.5 | プロジェクト横断のeval無し。`.claude/skills/material-design/evals/evals.json` に芽のみ |
 
-**総合：19.5 / 30（65%）** — Write戦略・Isolate・ルールベース検証は成熟。**PreToolUse 決定論的ガードレール（G-1）を導入済み**。残る弱点は「生成と評価の形式化」「構造化ハンドオフ」「評価ハーネス」「PostToolUse 自動 lint」。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
+**総合：20.5 / 30（68%）** — Write戦略・Isolate・ルールベース検証は成熟。**Hooks（Pre/Post/Notification）を一通り導入済み**（G-1・G-5）。残る弱点は「生成と評価の形式化」「構造化ハンドオフ」「評価ハーネス」。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
 
 ---
 
@@ -54,8 +54,8 @@
 - **G-4: ビジュアル検証を verify に統合**（領域9）
   UI 変更時に Playwright MCP でスクリーンショット→マルチモーダル評価を回す。既存の `webapp-testing`/`material-design` の資産を流用。
 
-- **G-5: PostToolUse フックで編集後 lint 自動化**（領域3）
-  ファイル編集直後に対象ファイルだけ lint（`async: true`）。verify を待たず早期フィードバック。
+- **✅ G-5（完了・[docs/019](../019_posttooluse_lint_and_notify.md)）: PostToolUse フックで編集後 lint 自動化**（領域3/9）
+  `Write|Edit` 後に JS/TS のみ eslint を実行し、指摘を stdout で Claude に返す（fast-fail）。あわせて共有 Notification 音（`notify.sh`）も導入。
 
 ### P3（計測して改善し続ける）
 
@@ -65,4 +65,4 @@
 ---
 
 ## 次にやるなら
-G-1（PreToolUse ガードレール）は **✅ 完了（docs/018）**。次点は **G-5（PostToolUse フックで編集後 lint 自動化）** か **G-2（構造化ハンドオフ）**。着手時は `docs/` に起票し、settings 変更は `update-config` スキルで人間承認のうえ行う。
+Hooks 系（G-1 PreToolUse / G-5 PostToolUse・Notification）は **✅ 完了（docs/018・019）**。次点は **G-2（構造化ハンドオフ）** か **G-3（Generator-Evaluator の形式化：sprint-contract / evaluation-rubric）**、その先に **G-6（評価ハーネス）**。着手時は `docs/` に起票し、settings 変更は `update-config` スキルで人間承認のうえ行う。

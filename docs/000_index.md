@@ -22,8 +22,9 @@
 | 016 | [Zod による入力バリデーション](./016_zod_input_validation.md) | ✅ 完了 | 8 / 8 |
 | 017 | [公開前セキュリティ/品質チェックリスト（是正バックログ）](./017_prelaunch_security_checklist.md) | 🔄 進行中 | 0 / 8 |
 | 018 | [PreToolUse ガードレール（決定論的ブロック）](./018_pretooluse_guardrails.md) | ✅ 完了 | 7 / 7 |
+| 019 | [PostToolUse lint-on-save ＋ 共有 Notification 音](./019_posttooluse_lint_and_notify.md) | ✅ 完了 | 6 / 6 |
 
-**総進捗: 205 / 214 タスク完了（残り：001 getClaims統一⚠️ ＋ 017 公開前バックログ 8件）**
+**総進捗: 211 / 220 タスク完了（残り：001 getClaims統一⚠️ ＋ 017 公開前バックログ 8件）**
 
 ---
 
