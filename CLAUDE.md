@@ -161,6 +161,8 @@ Conventional Commits 形式を使う：`<type>: <件名（日本語可）>`
 
 - コード変更後は `npm run lint` を通す（エラーは修正してからコミット）
 - UI 変更・新機能は `npm run dev` で動作確認してからコミット
+- **UI の品質評価は [`specs/evaluation-rubric.md`](specs/evaluation-rubric.md) に従う**（フロントエンド UI の評価基準。Generator-Evaluator：作った本人でなく別エージェント／別セッションが 6軸×重みで採点。合格 80 点以上・Critical 違反ゼロ）
+- **機能スプリントは [`specs/sprint-contract.md`](specs/sprint-contract.md) で完了基準を事前合意する**（実装スコープ／スコープ外／二値の完了基準／検証方法。Generator の「完了しました」は受理せず、Evaluator が全項目 Pass を確認して完了）
 - Server Action の変更は実際にフォーム送信して結果を確認する
 - 認証まわりの変更は未ログイン・一般ユーザー・管理者の3ロールで確認する
 
@@ -188,6 +190,7 @@ Conventional Commits 形式を使う：`<type>: <件名（日本語可）>`
 - `types/` — 型定義
 - `proxy.ts` — ルートの middleware（Next 16 で `middleware.ts` から改称）
 - `docs/` — 進捗チケット（`000_index.md` が一覧）
+- `specs/` — Generator-Evaluator の合意・評価文書（`sprint-contract.md`＝完了基準の事前合意・二値判定／`evaluation-rubric.md`＝フロントエンド UI の評価基準・段階評価）
 
 新しいルートは App Router 規約で `app/` 配下に追加する（`page.tsx`=ルート公開、`layout.tsx`=共有 UI、`route.ts`=外部 webhook / コールバック専用）。
 
