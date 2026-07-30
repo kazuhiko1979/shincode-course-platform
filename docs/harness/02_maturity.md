@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1 | コンテキスト4戦略 W/S/C/I | ✅ 3 | Write=`CLAUDE.md`/`AGENTS.md`/`docs/`/`.serena/memories`、Select=`.claude/rules/*`・Skills、Isolate=3 reviewers |
 | 2 | 6制御IF（俯瞰） | 🟡 2 | CLAUDE.md✅ Rules✅ Skills✅ Subagents✅ MCP✅ だが **Hooks が弱い** |
-| 3 | Hooks（決定論的制御） | ⚠️ 1 | 完了音（Notification相当）はグローバルの Stop hook のみ。**PreToolUse/PostToolUse 未導入**。危険操作の禁止は `AGENTS.md` の文章＝確率的 |
+| 3 | Hooks（決定論的制御） | 🟡 2.5 | **PreToolUse ガードレール導入済み**（`.claude/hooks/validate-*.sh`＋`.claude/settings.json`、[docs/018](../018_pretooluse_guardrails.md)）＝破滅的 rm・force push・git add -A/.・.env ステージ・Supabase 書き込みを `exit 2` で強制ブロック。完了音は Stop hook。PostToolUse（編集後 lint 自動化）は未導入 |
 | 4 | 設計パターン（ルーティング/ACI/投票） | ✅ 2.5 | Rules＝ルーティング✅、投票＝3視点レビュー✅（教材p62の実装そのもの）。ACIは外部MCP依存でカスタム最適化は限定的 |
 | 5 | Generator-Evaluator | 🟡 1.5 | reviewers が生成と分離した評価者として機能✅。但し `sprint-contract.md`/`evaluation-rubric.md` 無し、反復ループも非形式化 |
 | 6 | マルチエージェント | 🟡 2 | ファンアウト・ギャザー＝`/push-review`の3並列✅。オーケストレーター/パイプラインは非形式化 |
@@ -20,7 +20,7 @@
 | 9 | 検証ループ | 🟡 2 | **ルールベースは強い**（`npm run verify`＋CI＋reviewers）✅。ビジュアル検証は散発的、LLM-judgeはreviewersで近似 |
 | 10 | 評価ハーネス（Tasks/Graders/pass@k） | ⚠️ 0.5 | プロジェクト横断のeval無し。`.claude/skills/material-design/evals/evals.json` に芽のみ |
 
-**総合：18 / 30（60%）** — Write戦略・Isolate・ルールベース検証は成熟。**弱点は「決定論的ガードレール（Hooks）」「生成と評価の形式化」「構造化ハンドオフ」「評価ハーネス」の4点。** いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
+**総合：19.5 / 30（65%）** — Write戦略・Isolate・ルールベース検証は成熟。**PreToolUse 決定論的ガードレール（G-1）を導入済み**。残る弱点は「生成と評価の形式化」「構造化ハンドオフ」「評価ハーネス」「PostToolUse 自動 lint」。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
 
 ---
 
@@ -39,11 +39,9 @@
 
 ### P1（効果大・凹み対策の要）
 
-- **G-1: PreToolUse フックで「変更禁止ゾーン」を決定論的にブロック**（領域3）
-  現状 `AGENTS.md` の文章＝確率的な「お願い」。教材の核心は「失敗が許されない制御は Hooks で強制」。
-  対象例：`rm -rf`、`git push --force`、`git add -A`/`git add .`、`.env*` のステージ、Supabase MCP の書き込み（`apply_migration`/DDL・DML `execute_sql`）。
-  → `.claude/hooks/validate-*.sh` ＋ project `.claude/settings.json` の `PreToolUse`。`exit 2`＋`stdout`で代替案提示。
-  ※settings 変更のため、グローバル提供の `update-config` スキル経由で人間承認を取る（プロジェクト `.claude/skills/` には無いが、Skill ツールから利用可能）。
+- **✅ G-1（完了・[docs/018](../018_pretooluse_guardrails.md)）: PreToolUse フックで「変更禁止ゾーン」を決定論的にブロック**（領域3）
+  `AGENTS.md` の文章＝確率的な「お願い」だった禁止事項を、`.claude/hooks/validate-*.sh` ＋ `.claude/settings.json` の `PreToolUse` で `exit 2` 強制ブロックに格上げ。
+  対象：破滅的 `rm -rf`、`git push --force`、`git add -A`/`.`、`.env` ステージ、`sudo rm`、`reset --hard`、`clean -fdx`、`chmod 777`、`mkfs`、`dd`→device、fork bomb、`curl|sh`、Supabase MCP の書き込み（`apply_migration`/DDL・DML `execute_sql`、`CLAUDE_ALLOW_DB_WRITE=1` で承認オーバーライド）。pipe テスト 46/46 パス。
 
 - **G-2: 構造化ハンドオフの規約**（領域7）
   「コンテキスト不安」による早期打ち切り対策。長時間セッションの引き継ぎテンプレ（完了/未完了/重要判断/次アクション）を `docs/harness/handoff-template.md` として用意し、CLAUDE.md にセッション開始手順を追記。
@@ -67,4 +65,4 @@
 ---
 
 ## 次にやるなら
-P1 の **G-1（PreToolUse ガードレール）** が最も費用対効果が高い（`AGENTS.md` の禁止事項を「文章」から「強制」へ格上げ）。着手時は `docs/` に起票し、`update-config` スキルで settings を人間承認のうえ変更する。
+G-1（PreToolUse ガードレール）は **✅ 完了（docs/018）**。次点は **G-5（PostToolUse フックで編集後 lint 自動化）** か **G-2（構造化ハンドオフ）**。着手時は `docs/` に起票し、settings 変更は `update-config` スキルで人間承認のうえ行う。

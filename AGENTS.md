@@ -54,6 +54,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 AI エージェントが安全に開発するための行動規範。**このファイルが正典**で、`CLAUDE.md` からも `@import` される。以下は「レビュー基準」ではなく「作業手順の遵守事項」。迷ったら停止して人間に確認する。
 
+> **一部は決定論的に強制されている**：破滅的 `rm`・`git push --force`・`git add -A`/`.`・`.env` ステージ・Supabase MCP の書き込み等は、`.claude/settings.json` の **PreToolUse フック**（`.claude/hooks/validate-*.sh`）が `exit 2` で実際にブロックする（＝文章の「お願い」ではなく強制）。詳細と対象一覧は [`docs/018_pretooluse_guardrails.md`](docs/018_pretooluse_guardrails.md)。DB 書き込みの承認済み実行は `CLAUDE_ALLOW_DB_WRITE=1` を付ける。
+
 ### 1. 変更禁止ゾーン（人間の明示承認なしに触らない）
 
 以下は事故の影響が大きい、または認可・セキュリティ境界そのもの。**変更・実行の前に必ず人間へ確認し、承認を得てから**行う。
