@@ -118,5 +118,6 @@ AI エージェント開発を一過性でなく **資産として蓄積・洗�
 - [`docs/harness/01_principles.md`](docs/harness/01_principles.md) — 原則集（W/S/C/I・6制御IF・Hooks・Generator-Evaluator・検証/評価ハーネス）
 - [`docs/harness/02_maturity.md`](docs/harness/02_maturity.md) — 本プロジェクトの成熟度採点・ギャップ・導入ロードマップ
 - [`docs/harness/03_one-pager.md`](docs/harness/03_one-pager.md) — 1枚まとめ
+- [`docs/harness/04_bootstrap-playbook.md`](docs/harness/04_bootstrap-playbook.md) — 新プロジェクト起ち上げプレイブック（安全の最小セット→仕様→PoC→issue駆動→ハーネスを育てる）
 
 > **設計哲学：AI の凹みに構造を、でっぱりは安心して任せられるように。モデルが進化しても、設計したハーネス構造は資産として永続する。**
