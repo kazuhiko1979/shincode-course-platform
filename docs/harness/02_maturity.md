@@ -13,14 +13,14 @@
 | 2 | 6制御IF（俯瞰） | 🟡 2 | CLAUDE.md✅ Rules✅ Skills✅ Subagents✅ MCP✅ だが **Hooks が弱い** |
 | 3 | Hooks（決定論的制御） | ✅ 3 | **Pre/Post/Notification すべて導入済み**：PreToolUse ガードレール（[docs/018](../018_pretooluse_guardrails.md)、危険操作を `exit 2` ブロック）＋ PostToolUse lint-on-save（[docs/019](../019_posttooluse_lint_and_notify.md)、編集後 eslint）＋ 共有 Notification 音（`notify.sh`）。設定は `.claude/settings.json`（チーム共有） |
 | 4 | 設計パターン（ルーティング/ACI/投票） | ✅ 2.5 | Rules＝ルーティング✅、投票＝3視点レビュー✅（教材p62の実装そのもの）。ACIは外部MCP依存でカスタム最適化は限定的 |
-| 5 | Generator-Evaluator | 🟡 1.5 | reviewers が生成と分離した評価者として機能✅。但し `sprint-contract.md`/`evaluation-rubric.md` 無し、反復ループも非形式化 |
+| 5 | Generator-Evaluator | 🟡 2.5 | reviewers が生成と分離した評価者として機能✅。**`specs/evaluation-rubric.md`（段階評価）と `specs/sprint-contract.md`（二値の完了基準・合意文書）を整備済み**。残りは実スプリントでの反復ループ運用実績 |
 | 6 | マルチエージェント | 🟡 2 | ファンアウト・ギャザー＝`/push-review`の3並列✅。オーケストレーター/パイプラインは非形式化 |
 | 7 | 長時間エージェント管理 | 🟡 1.5 | 進捗ファイル＝`docs/`チケット運用✅（更新ルール厳格）。**構造化ハンドオフ文書の規約なし**、`feature_list`型のテストロックなし |
 | 8 | ツール設計（ACI/選択的実装） | 🟡 2 | MCPは外部（supabase/github/playwright）中心でカスタムACIは無し。CLAUDE.mdのコマンド記述は改善済✅ |
 | 9 | 検証ループ | 🟡 2.5 | **ルールベースは強い**（`npm run verify`＋CI＋reviewers）✅。**PostToolUse lint-on-save で編集直後の自動ゲートも追加**（docs/019）。ビジュアル検証は散発的、LLM-judgeはreviewersで近似 |
 | 10 | 評価ハーネス（Tasks/Graders/pass@k） | ⚠️ 0.5 | プロジェクト横断のeval無し。`.claude/skills/material-design/evals/evals.json` に芽のみ |
 
-**総合：20.5 / 30（68%）** — Write戦略・Isolate・ルールベース検証は成熟。**Hooks（Pre/Post/Notification）を一通り導入済み**（G-1・G-5）。残る弱点は「生成と評価の形式化」「構造化ハンドオフ」「評価ハーネス」。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
+**総合：21.5 / 30（72%）** — Write戦略・Isolate・ルールベース検証は成熟。**Hooks 一式**（G-1・G-5）と **Generator-Evaluator の形式化**（G-3：rubric＋sprint-contract）を導入済み。残る弱点は「構造化ハンドオフ（G-2）」「評価ハーネス（G-6）」と G-3/G-4 の運用実績。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
 
 ---
 
@@ -48,8 +48,9 @@
 
 ### P2（品質の底上げ）
 
-- **G-3: Generator-Evaluator の形式化**（領域5）
-  機能開発時に `specs/sprint-contract.md`（完了基準＝二値）と `specs/evaluation-rubric.md`（品質＝段階）を作り、reviewers を Evaluator として回す。過度な仕様書は不要、検証可能な完了条件に集中。
+- **✅ G-3（形式化完了）: Generator-Evaluator の形式化**（領域5）
+  ✅ `specs/evaluation-rubric.md`（UI 品質基準＝段階評価）と ✅ `specs/sprint-contract.md`（完了基準＝二値の合意文書。ユーザ認証機能を正典例＝回帰チェックリストとして記載）を整備。いずれも CLAUDE.md のテスト方針・ディレクトリ構成から参照。
+  残り：実スプリントでの運用実績（契約の事前合意 → Evaluator の全項目 Pass 確認 → rubric 反復採点）。
 
 - **G-4: ビジュアル検証を verify に統合**（領域9）
   UI 変更時に Playwright MCP でスクリーンショット→マルチモーダル評価を回す。既存の `webapp-testing`/`material-design` の資産を流用。

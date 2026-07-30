@@ -37,11 +37,11 @@
 - 完璧でなく、**品質基準を満たす最小限の反復**で止める（最初の2〜3回で最大改善）。
 - **少コストで壊れたもの**より **適正コストで動くもの**。
 
-## 本プロジェクトの現在地（20.5/30・68%）
+## 本プロジェクトの現在地（21.5/30・72%）
 
-- **強い**：Write戦略・Isolate＋投票レビュー・ルールベース検証ゲート・**Hooks 一式（PreToolUse ガードレール＋PostToolUse lint＋Notification、docs/018・019）**。
-- **伸びしろ（凹み対策）**：①生成と評価の形式化 ②構造化ハンドオフ ③評価ハーネス（pass@k）。
-- **次の一手**：構造化ハンドオフの規約化、または Generator-Evaluator（sprint-contract / rubric）の導入。
+- **強い**：Write戦略・Isolate＋投票レビュー・ルールベース検証ゲート・**Hooks 一式（docs/018・019）**・**Generator-Evaluator の形式化（specs/ の rubric＋sprint-contract）**。
+- **伸びしろ（凹み対策）**：①構造化ハンドオフ ②評価ハーネス（pass@k）③specs/ の運用実績づくり。
+- **次の一手**：構造化ハンドオフの規約化。次の機能開発で sprint-contract → Evaluator 検収の流れを実践する。
 
 ## 今日から
 
