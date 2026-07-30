@@ -5,7 +5,8 @@
 
 (
   if command -v powershell.exe >/dev/null 2>&1; then
-    powershell.exe -c "[console]::beep(880,200)"        # Windows / WSL
+    # Windows / WSL — same wav as the Stop completion sound (speaker output)
+    powershell.exe -c "(New-Object System.Media.SoundPlayer 'C:\\Windows\\Media\\chimes.wav').PlaySync()"
   elif command -v afplay >/dev/null 2>&1; then
     afplay /System/Library/Sounds/Ping.aiff             # macOS
   elif command -v paplay >/dev/null 2>&1; then
