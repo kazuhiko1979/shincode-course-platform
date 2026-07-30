@@ -12,6 +12,7 @@
 | [01_principles.md](./01_principles.md) | **原則集（軸）**。W/S/C/I・6制御IF・Hooks・G-E・検証/評価ハーネス等を本プロジェクト向けに蒸留 | ハーネスを設計・変更する前に参照（Select戦略：常時読み込みではない） |
 | [02_maturity.md](./02_maturity.md) | **現状の成熟度採点**＋ギャップ＋優先度付き導入ロードマップ | 改善タスクを起票する時 |
 | [03_one-pager.md](./03_one-pager.md) | **1枚まとめ**（チーム共有用） | 全員がまず読む／振り返り |
+| [04_bootstrap-playbook.md](./04_bootstrap-playbook.md) | **起ち上げプレイブック**。新プロジェクトを AI エージェントと始める手順（安全の最小セット→仕様→PoC→issue駆動→ハーネスを育てる→Claude Code×Codex 運用） | 新しいプロジェクトを始める時 |
 
 ## 使い方（このナレッジをどう回すか）
 
