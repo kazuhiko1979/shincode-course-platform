@@ -94,10 +94,11 @@ npm run build      # production build（型チェックも兼ねる）
 npm run start      # start production server
 npm run lint       # run ESLint
 npm run typecheck  # tsc --noEmit（型チェックのみ・高速）
-npm run verify     # lint → typecheck → build を一括実行（完了前に必ず通す）
+npm test           # Node 組み込み node:test で test/ の単体テスト（依存ゼロ・Node 22.18+・@/ は test/setup/ が解決）
+npm run verify     # lint → typecheck → test → build を一括実行（完了前に必ず通す）
 ```
 
-No test runner is configured. 代わりに **`npm run verify`** を「テストを必ず実行する」の正規ゲートとして使う（完了主張の前に実行し、出力を提示する）。CI（`.github/workflows/ci.yml`）でも PR / main push 時に同等の検証が走る。
+外部テストランナーは未導入（依存追加は変更禁止ゾーン）。純粋ロジックの単体テストは **Node 組み込みの `node:test`**（`npm test`、`test/` 配下）で行い、**`npm run verify`** を「テストを必ず実行する」の正規ゲートとして使う（完了主張の前に実行し、出力を提示する）。CI（`.github/workflows/ci.yml`）でも PR / main push 時に同等の検証が走る。`test/` 配下の対象コード（例：`lib/auth.ts` の純関数）を変更したら `npm test` も通すこと。
 
 ### その他のコマンド
 
@@ -157,19 +158,32 @@ Conventional Commits 形式を使う：`<type>: <件名（日本語可）>`
 
 ### テスト方針
 
-テストランナーは未設定。代わりに以下を必ず行う：
+単体テストは Node 組み込みの `node:test`（`npm test`・`test/` 配下・依存ゼロ）。UI/統合テスト基盤は未導入。以下を必ず行う：
 
 - コード変更後は `npm run lint` を通す（エラーは修正してからコミット）
+- `test/` にテストがある対象（`lib/auth.ts` の純関数等）を変更したら `npm test` を通す。**テストを通すためにテストファイルを書き換えたり、実装出力を期待値に貼り付けたりしない**（抜け道封じ。テスト側の変更が必要なら理由を明示して人間の承認を得る）
 - UI 変更・新機能は `npm run dev` で動作確認してからコミット
 - **UI の品質評価は [`specs/evaluation-rubric.md`](specs/evaluation-rubric.md) に従う**（フロントエンド UI の評価基準。Generator-Evaluator：作った本人でなく別エージェント／別セッションが 6軸×重みで採点。合格 80 点以上・Critical 違反ゼロ）
 - **機能スプリントは [`specs/sprint-contract.md`](specs/sprint-contract.md) で完了基準を事前合意する**（実装スコープ／スコープ外／二値の完了基準／検証方法。Generator の「完了しました」は受理せず、Evaluator が全項目 Pass を確認して完了）
 - Server Action の変更は実際にフォーム送信して結果を確認する
 - 認証まわりの変更は未ログイン・一般ユーザー・管理者の3ロールで確認する
 
+### /goal の条件の書き方（曖昧な条件は受理しない）
+
+`/goal` は Claude Code のセッションゴール機能（条件が成立するまで停止をブロックする Stop hook）。その条件は **証拠 ＋ 抜け道封じ** の形式で書く。ゴール全般（依頼の受理条件）にも同じ書き方を適用する。
+
+- **証拠**：機械で二値判定できる観察結果（例：「`npm test` が全通過」「`npm run verify` が exit 0」「`specs/sprint-contract.md` の完了基準が全項目 Pass」「`getSession` の grep が 0 件」）
+- **抜け道封じ**：指標の改竄を禁じる制約（例：「テストファイルは書き換えない」「期待値・スナップショットに実装出力を直書きしない」「lint ルールを無効化しない」）
+
+**曖昧な条件（「きれいに」「いい感じに」「ちゃんと」等）を受け取ったら、作業を開始する前に上記形式へ書き直した条件を提示し、ユーザーの合意を得てから着手する。** 程度の評価（どの程度良いか）は `/goal` でなく `specs/evaluation-rubric.md` で行う。
+
+> 例：「認証まわりをきれいになおして」（悪い：検証不能・改竄可能）→「`test/auth` のテストが全部通り lint がクリーン ＋ テストファイルは書き換えない・期待値を直書きしない」（良い：証拠＋抜け道封じ）
+
 ### コミット前チェックリスト
 
 - [ ] `npm run lint` がエラーなし
 - [ ] `npm run build` が通る（型エラーなし）
+- [ ] `test/` に関係する変更なら `npm test` が全通過
 - [ ] `.env*` ファイルをステージングしていない
 
 ---

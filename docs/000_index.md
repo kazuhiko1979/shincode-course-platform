@@ -23,8 +23,9 @@
 | 017 | [公開前セキュリティ/品質チェックリスト（是正バックログ）](./017_prelaunch_security_checklist.md) | 🔄 進行中 | 0 / 8 |
 | 018 | [PreToolUse ガードレール（決定論的ブロック）](./018_pretooluse_guardrails.md) | ✅ 完了 | 7 / 7 |
 | 019 | [PostToolUse lint-on-save ＋ 共有 Notification 音](./019_posttooluse_lint_and_notify.md) | ✅ 完了 | 6 / 6 |
+| 020 | [認証ロジックの単体テスト（/goal 演習：証拠＋抜け道封じ）](./020_auth_unit_tests.md) | ✅ 完了 | 7 / 7 |
 
-**総進捗: 211 / 220 タスク完了（残り：001 getClaims統一⚠️ ＋ 017 公開前バックログ 8件）**
+**総進捗: 218 / 227 タスク完了（残り：001 getClaims統一⚠️ ＋ 017 公開前バックログ 8件）**
 
 ---
 

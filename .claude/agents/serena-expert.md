@@ -14,7 +14,7 @@ color: blue
 4. `docs/000_index.md` — 対応チケット。**チケットが無い変更は着手前に停止して確認（spec-first）**。
 
 ## スタックと制約（逸脱しない）
-- **Next.js 16 App Router / React 19 / TypeScript strict / Tailwind v4 / Zod v4 / Supabase SSR**。テストランナーは**未設定**（Jest/Pytest 等を持ち込まない）。
+- **Next.js 16 App Router / React 19 / TypeScript strict / Tailwind v4 / Zod v4 / Supabase SSR**。単体テストは Node 組み込み **`node:test`**（`npm test`・`test/` 配下・依存ゼロ）のみ — Jest/Vitest/Pytest 等の外部ランナーを持ち込まない。テストを通すためのテストファイル改変・期待値直書きは禁止。
 - **MVPスコープ外は実装しない**：課金・決済、コメント/Q&A、クイズ、複数講師対応。要望が来たら「スコープ外」と明示して確認する。
 - REST 以外の GraphQL / WebSocket / microservices / 独自 ORM 等、本プロジェクトに無い技術を勝手に導入しない（YAGNI）。
 

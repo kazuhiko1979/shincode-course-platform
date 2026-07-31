@@ -1,7 +1,7 @@
 name: CI
 
-# 目的: PR / main への push で lint・typecheck・build を必ず実行する
-# （テストランナー未設定のため、これが「テストを必ず実行する」の強制力）。
+# 目的: PR / main への push で lint・typecheck・unit test・build を必ず実行する
+# （「テストを必ず実行する」の強制力。単体テストは Node 組み込み node:test・依存ゼロ）。
 on:
   pull_request:
   push:
@@ -33,6 +33,10 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
+
+      # 単体テスト（node:test・環境変数不要・~0.5s）
+      - name: Unit tests
+        run: npm test
 
       # next build は公開ページが Supabase 公開クライアントを参照するため
       # publishable（公開可）キーが必要。GitHub の

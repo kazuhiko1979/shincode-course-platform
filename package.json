@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run lint && npm run typecheck && npm run build"
+    "test": "node --import ./test/setup/register.mjs --test \"test/**/*.test.ts\"",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=22.18"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
