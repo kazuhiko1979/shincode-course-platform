@@ -68,7 +68,7 @@ AI エージェントが安全に開発するための行動規範。**このフ
 - **DB スキーマ / RLS / `SECURITY DEFINER` 関数**（`is_admin` / `admin_*` / `handle_new_user` など）。
 - **Supabase MCP のリモート書き込み**：`apply_migration` と、DDL/DML を伴う `execute_sql`（`INSERT`/`UPDATE`/`DELETE`/`ALTER`/`DROP`/`GRANT`/`REVOKE` 等）。読み取り（`SELECT`）・`list_*`・`get_advisors` は可。
 - **`next.config.ts` のセキュリティヘッダー**（HSTS / CSP / `frame-ancestors` / `X-Frame-Options` / Referrer-Policy / Permissions-Policy）の削除・緩和。
-- **レビュー機構**：`.claude/agents/*`・`.claude/commands/*`・`.claude/agent-memory/*`（チェックを弱める変更）。
+- **レビュー機構・ハーネス強制系**：`.claude/agents/*`・`.claude/commands/*`・`.claude/agent-memory/*`・`.claude/hooks/*`・`.claude/settings.json`（チェック・ガードレールを弱める変更）。
 - **依存関係**：`package.json` への依存追加・削除・アップグレード（供給網・破壊的変更リスク）。
 
 ### 2. spec-first（勝手な仕様追加の禁止）
@@ -124,5 +124,6 @@ AI エージェント開発を一過性でなく **資産として蓄積・洗�
 - [`docs/harness/02_maturity.md`](docs/harness/02_maturity.md) — 本プロジェクトの成熟度採点・ギャップ・導入ロードマップ
 - [`docs/harness/03_one-pager.md`](docs/harness/03_one-pager.md) — 1枚まとめ
 - [`docs/harness/04_bootstrap-playbook.md`](docs/harness/04_bootstrap-playbook.md) — 新プロジェクト起ち上げプレイブック（安全の最小セット→仕様→PoC→issue駆動→ハーネスを育てる）
+- [`docs/harness/05_multiagent-playbook.md`](docs/harness/05_multiagent-playbook.md) — マルチエージェント運用（壁打ち既定・プロンプトの形で3パターンへ昇格・最小ツール・計画のメモリ保存）
 
 > **設計哲学：AI の凹みに構造を、でっぱりは安心して任せられるように。モデルが進化しても、設計したハーネス構造は資産として永続する。**

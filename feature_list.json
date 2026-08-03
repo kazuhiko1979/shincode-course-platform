@@ -1,0 +1,103 @@
+{
+  "_rules": "機能と検証手順の台帳（docs/021）。変更してよいのは各項目の passes フィールドのみ（実際に verification を実行して結果を確認した時だけ true/false を更新）。項目の削除・description/verification の書き換えは人間の明示承認が必要（テストを消して全合格を偽装する抜け道の封じ）。新機能はチケット完了時に項目を追記してよい。 注: 検証の多くは手動目視で、npm test に紐づくのは open-redirect-guard / admin-role-check のみ。passes は文章規約であり決定論的強制はない（PreToolUse ガード化は候補）。",
+  "features": [
+    {
+      "id": "google-oauth-login",
+      "category": "auth",
+      "description": "統一ログイン（/auth/login）から Google OAuth でログインできる（一般・管理者共通、?next= 対応）",
+      "verification": "3ロール手動確認（specs/sprint-contract.md §2）",
+      "passes": true
+    },
+    {
+      "id": "role-based-redirect",
+      "category": "auth",
+      "description": "ログイン後、next 無しなら admin→/admin・user→/mypage に遷移する",
+      "verification": "specs/sprint-contract.md §2「ログイン遷移」を手動確認",
+      "passes": true
+    },
+    {
+      "id": "open-redirect-guard",
+      "category": "auth",
+      "description": "next の危険値（絶対URL・//・バックスラッシュ・制御文字・javascript:）は safeRedirectPath が拒否する",
+      "verification": "npm test（test/auth/safe-redirect-path.test.ts 全通過）",
+      "passes": true
+    },
+    {
+      "id": "route-protection",
+      "category": "auth",
+      "description": "未ログインの /mypage・/admin は /auth/login?next=… へ、一般ユーザーの /admin/* は /mypage へ振り分け（middleware＋layout 多層）",
+      "verification": "specs/sprint-contract.md §2「ゲスト」「一般ユーザー」を手動確認",
+      "passes": true
+    },
+    {
+      "id": "admin-role-check",
+      "category": "auth",
+      "description": "管理者判定は users.role='admin' のみ（isAdminById に一元化・getClaims 使用）",
+      "verification": "npm test（test/auth/is-admin-by-id.test.ts）＋ getSession の grep が 0 件",
+      "passes": true
+    },
+    {
+      "id": "course-list-top",
+      "category": "courses",
+      "description": "トップ（/）でコース一覧をゲスト閲覧できる（'use cache' + cacheTag）",
+      "verification": "curl -sf http://localhost:3000/ が 200・一覧目視",
+      "passes": true
+    },
+    {
+      "id": "course-detail",
+      "category": "courses",
+      "description": "/courses/[id] でコース詳細と動画一覧を表示できる",
+      "verification": "npm run dev で該当ページ目視",
+      "passes": true
+    },
+    {
+      "id": "video-playback-progress",
+      "category": "courses",
+      "description": "/courses/[id]/videos/[videoId] で YouTube 再生と視聴済みトグルができ、video_progress に反映される",
+      "verification": "ログイン状態でトグル操作→マイページ進捗に反映を目視",
+      "passes": true
+    },
+    {
+      "id": "course-search",
+      "category": "search",
+      "description": "/search?q= で検索結果（relevance/newest）、ヘッダーからオートサジェスト",
+      "verification": "curl -s \"http://localhost:3000/search?q=Next\" に結果・サジェスト目視",
+      "passes": true
+    },
+    {
+      "id": "enrollment-mypage",
+      "category": "mypage",
+      "description": "受講登録でき、/mypage/courses に受講中コースと進捗が表示される",
+      "verification": "登録操作→/mypage/courses・/mypage/courses/[id] を目視",
+      "passes": true
+    },
+    {
+      "id": "admin-course-crud",
+      "category": "admin",
+      "description": "/admin/courses でコースの作成・編集・削除ができる（Zod 検証・updateTag）",
+      "verification": "各フォームを実際に送信して結果と一覧反映を確認",
+      "passes": true
+    },
+    {
+      "id": "admin-video-crud",
+      "category": "admin",
+      "description": "コース配下の動画の追加・編集・削除ができる（所有権 WHERE: id＋course_id）",
+      "verification": "各フォームを実際に送信して確認",
+      "passes": true
+    },
+    {
+      "id": "admin-users-roles",
+      "category": "admin",
+      "description": "/admin/users で全ユーザー一覧と role 変更（admin_list_users/admin_set_role・最後の admin 降格防止）",
+      "verification": "管理者で role 変更操作→反映確認（一般ユーザーでは不可）",
+      "passes": true
+    },
+    {
+      "id": "admin-stats",
+      "category": "admin",
+      "description": "/admin/stats で集計（admin_stats() の JSON）を表示できる",
+      "verification": "管理者でページ目視",
+      "passes": true
+    }
+  ]
+}

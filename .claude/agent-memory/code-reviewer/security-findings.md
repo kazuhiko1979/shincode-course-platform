@@ -1,6 +1,6 @@
 ---
 name: security-findings
-description: Confirmed security gaps found during code reviews — updated after 2026-06-05 セキュリティ強化 commit
+description: Confirmed security gaps found during code reviews — 未解決一覧（2026-08-02 に deleteVideo の項目を解消済みへ更新）
 metadata:
   type: project
 ---
@@ -24,6 +24,11 @@ All admin Server Actions now call `isCurrentUserAdmin()` at the top of each acti
 - `app/admin/(protected)/courses/[id]/videos/actions.ts` — `createVideo`, `updateVideo`, `deleteVideo`
 - `app/admin/(protected)/users/actions.ts` — `setUserRole`
 
+### RESOLVED: deleteVideo ownership WHERE (re-verified 2026-08-02)
+`app/admin/(protected)/courses/[id]/videos/actions.ts` の delete は
+`.eq('id', videoIdResult.data).eq('course_id', courseIdResult.data)` になっており、
+`updateVideo` と対称。以前「STILL OPEN」と記録していたが解消済み。
+
 ### RESOLVED: course_id injection in updateVideo
 `updateVideo` now includes `.eq('course_id', courseId)` to prevent updating a video that belongs to a different course than specified.
 
@@ -38,27 +43,22 @@ All admin Server Actions now call `isCurrentUserAdmin()` at the top of each acti
 ### 0. GET /auth/callback triggers enrollment (state change on GET) — confirmed 2026-07-10
 `app/auth/callback/route.ts` line 17-19: `if (enroll) { await enrollCourse(enroll) }` runs inside the GET handler. This is a state-changing side effect on a GET. It's OAuth-code-gated (needs valid `code`) so CSRF risk is limited, but it violates the "no state change on GET" rule and enrolls into an attacker-chosen course via a crafted `?enroll=<uuid>` link during the callback. Low severity (only enrolls the victim into a free course) but flagged by CLAUDE.md's checklist. Same pattern also acceptable in login/signup pages because those are the user's own navigation.
 
-### 1. deleteVideo missing .eq('course_id', courseId) — STILL OPEN, confirmed 2026-07-10
-`app/admin/(protected)/courses/[id]/videos/actions.ts` line 103:
-`supabase.from('videos').delete().eq('id', videoIdResult.data)` — does NOT include `.eq('course_id', courseIdResult.data)`.
-`updateVideo` got the fix but `deleteVideo` did not. A crafted call with a valid videoId for a different course can still delete that video (admin-only operation, so risk is low but the fix is simple).
-
-### 2. CSRF on state-changing endpoints
+### 1. CSRF on state-changing endpoints
 `Origin`/`Sec-Fetch-Site` verification not implemented for admin actions. CLAUDE.md flags this.
 
-### 3. SECURITY DEFINER function grants
+### 2. SECURITY DEFINER function grants
 `admin_*`/`is_admin`/`handle_new_user` — `REVOKE EXECUTE FROM PUBLIC` not verifiable from code. Needs actual DB check.
 
-### 4. Rate limiting absent
+### 3. Rate limiting absent
 No IP/user-level rate limiting on search, login flow, or admin mutations.
 
-### 5. /search page missing noindex
+### 4. /search page missing noindex
 `/search` and result pages lack `robots: { index: false }`.
 
-### 6. OGP images not set
+### 5. OGP images not set
 `openGraph`/`twitter` images missing.
 
-### 7. XML sitemap not created
+### 6. XML sitemap not created
 `app/sitemap.ts` does not exist.
 
 **How to apply:** When reviewing new code that touches admin actions, always check for server-side admin re-verification AND that DELETE/UPDATE queries include ownership constraints (course_id, user_id) alongside the primary ID. When reviewing `next.config.ts` changes, verify headers remain present.

@@ -1,0 +1,22 @@
+# claude-progress.txt — セッション間ハンドオフ（エージェント自身が更新する。人間は読むだけでよい）
+# ルール（docs/021）: 検証済みの事実のみ（主張はツール結果で裏付け、推測は「未検証」明記）／60行以内（古い完了項目から削る）
+# シークレット（キー・トークン・URL）の値は書かない（名前だけ）／更新は作業の区切りごと
+
+## 完了した作業（直近・git log で検証済み）
+- 2026-07-30: ハーネス Hooks 一式（#018/#019 = PR #15 ce8f5b2・PR #16 03860fb）
+- 2026-07-30: Generator-Evaluator 形式化（specs/sprint-contract・evaluation-rubric = PR #18 80d210a）
+- 2026-07-31: 認証単体テスト＋/goal 条件指針（#020 = PR #19 6fefa3f。npm test 11/11・verify/CI にゲート組み込み）
+- 2026-08-02: マルチエージェント運用ルーティング（docs/harness/05_multiagent-playbook.md）＋構造化ハンドオフ基盤（#021）を実装、/push-review の指摘（台帳の算術・日付・フック堅牢化）を反映
+
+## 現在の状態
+- 作業ブランチ feat/multiagent-and-handoff の #021 は /push-review 承認済み（APPROVED WITH NOTES）。マージ後に main へ反映。最新状態は必ず git log --oneline -5 / git status で確認すること
+- 品質ゲート: npm run verify（lint→typecheck→test→build）exit 0・テスト 11/11（2026-08-02 実測）
+- 残チケット: 001 getClaims統一⚠️ ／ 017 公開前セキュリティバックログ 0/8
+- ハーネス成熟度: 24/30（80%）— docs/harness/02_maturity.md（2026-08-02 採点）
+
+## 次のアクション（優先順）
+1. 017 公開前セキュリティ/品質バックログの是正（8件）
+2. 次の機能開発で「sprint-contract 合意 → 実装 → 別エージェント検収」のパイプラインを実践（specs/ の運用実績づくり）
+3. G-6 評価ハーネスの種まき（20タスク＋pass@k）
+4. 抜け道封じの決定論化候補：test/**・feature_list.json・claude-progress.txt への PreToolUse ガード（現状は文章規約）
+5. テスト強化（スタブ引数アサート・DBエラー時 fail-closed の固定）
