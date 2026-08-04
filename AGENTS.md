@@ -85,7 +85,7 @@ AI エージェントが安全に開発するための行動規範。**このフ
 
 ### 4. 検証の義務（テストを必ず実行する）
 
-- 「完了」「修正した」「通った」と主張する前に、必ず `npm run verify`（= lint → typecheck → test → build）を実行し、**その出力を提示する**。実行していないなら「未検証」と明記する（推測で完了宣言しない）。
+- コード・設定を変更したら、「完了」「修正した」「通った」と主張する前に必ず `npm run verify`（= lint → typecheck → test → build）を実行し、**その出力を提示する**（docs/md のみの変更はリンク・数値整合の確認で足りる — [検証の階段](docs/harness/07_verification-loop.md)）。実行していないなら「未検証」と明記する（推測で完了宣言しない）。
 - 認証・認可に関わる変更は、未ログイン / 一般ユーザー / 管理者の **3 ロール**で挙動を確認する。
 - Server Action の変更は実際にフォーム送信して結果を確認する。UI 変更は `npm run dev` で目視確認する。
 
@@ -125,5 +125,7 @@ AI エージェント開発を一過性でなく **資産として蓄積・洗�
 - [`docs/harness/03_one-pager.md`](docs/harness/03_one-pager.md) — 1枚まとめ
 - [`docs/harness/04_bootstrap-playbook.md`](docs/harness/04_bootstrap-playbook.md) — 新プロジェクト起ち上げプレイブック（安全の最小セット→仕様→PoC→issue駆動→ハーネスを育てる）
 - [`docs/harness/05_multiagent-playbook.md`](docs/harness/05_multiagent-playbook.md) — マルチエージェント運用（壁打ち既定・プロンプトの形で3パターンへ昇格・最小ツール・計画のメモリ保存）
+- [`docs/harness/06_tool-design.md`](docs/harness/06_tool-design.md) — ツール設計（ACI）基準と監査台帳（選択的実装・命名・エラー3点セット・3フェーズ改善）
+- [`docs/harness/07_verification-loop.md`](docs/harness/07_verification-loop.md) — 検証ループ（3戦略ルーティング・検証の階段・過剰検証の回避・シンプル→精緻化）
 
 > **設計哲学：AI の凹みに構造を、でっぱりは安心して任せられるように。モデルが進化しても、設計したハーネス構造は資産として永続する。**
