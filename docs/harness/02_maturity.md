@@ -1,7 +1,7 @@
 # 本プロジェクトのハーネス成熟度アセスメント
 
 > 「[01_principles.md](./01_principles.md)」の枠組みで、本リポジトリの現状ハーネスを採点し、ギャップと導入候補を整理する。
-> 採点日：2026-08-02（#021 反映時点）。設計哲学＝**「凹みに構造を、でっぱりは安心して任せる」**（凹み対策がどれだけ構造化されているかを見る）。
+> 採点日：2026-08-04（#022/#023 反映時点）。設計哲学＝**「凹みに構造を、でっぱりは安心して任せる」**（凹み対策がどれだけ構造化されているかを見る）。
 
 **凡例**：✅ 十分 / 🟡 部分的 / ⚠️ 不足 / ❌ 未着手 ・ スコアは 0–3。
 
@@ -16,11 +16,11 @@
 | 5 | Generator-Evaluator | 🟡 2.5 | reviewers が生成と分離した評価者として機能✅。**`specs/evaluation-rubric.md`（段階評価）と `specs/sprint-contract.md`（二値の完了基準・合意文書）を整備済み**。残りは実スプリントでの反復ループ運用実績 |
 | 6 | マルチエージェント | 🟡 2.5 | ファンアウト・ギャザー＝`/push-review`の3並列✅。**運用ルーティングを形式化**（[05_multiagent-playbook.md](./05_multiagent-playbook.md)＝壁打ち既定・プロンプトの形で3パターンへ昇格・最小ツール・計画のメモリ保存。CLAUDE.md に判定表を常時配線）。オーケストレーター・ワーカーの実運用実績が残り |
 | 7 | 長時間エージェント管理 | 🟡 2.5 | **構造化ハンドオフ導入済み**（[docs/021](../021_long_session_handoff.md)）：`claude-progress.txt`（引き継ぎノート）＋`feature_list.json`（passes のみ変更可の規約）＋**SessionStart フックで自動注入**（決定論化）。コンテキスト不安/肥大化/毒性の規律を CLAUDE.md に明文化。残りは実運用実績 |
-| 8 | ツール設計（ACI/選択的実装） | 🟡 2 | MCPは外部（supabase/github/playwright）中心でカスタムACIは無し。CLAUDE.mdのコマンド記述は改善済✅ |
-| 9 | 検証ループ | 🟡 2.5 | **ルールベースは強い**（`npm run verify`＋CI＋reviewers）✅。**PostToolUse lint-on-save で編集直後の自動ゲートも追加**（docs/019）。ビジュアル検証は散発的、LLM-judgeはreviewersで近似 |
+| 8 | ツール設計（ACI/選択的実装） | 🟡 2.5 | **ACI 基準と監査台帳を形式化**（[06_tool-design.md](./06_tool-design.md)＝選択的実装3〜5・命名・エラー3点セット・3フェーズ改善・運用チェックリスト。reviewers は5ツール適合、notion 削減を勧告）。カスタム MCP は無し（必要になるまで作らない＝YAGNI） |
+| 9 | 検証ループ | 🟡 2.5 | **ルールベースは強い**（`verify`＋CI＋lint-on-save）✅。**3戦略のルーティングと「検証の階段」を形式化**（[07_verification-loop.md](./07_verification-loop.md)＝まずルールベース・過剰検証の回避・シンプル→実測→精緻化。CLAUDE.md テスト方針に要約配線）。残りはビジュアル/rubric 採点の運用実績 |
 | 10 | 評価ハーネス（Tasks/Graders/pass@k） | ⚠️ 0.5 | プロジェクト横断のeval無し。`.claude/skills/material-design/evals/evals.json` に芽のみ |
 
-**総合：24 / 30（80%）** — Write戦略・Isolate・ルールベース検証は成熟。**Hooks 一式**（G-1・G-5）・**Generator-Evaluator の形式化**（G-3）・**マルチエージェント運用ルーティング**（05_multiagent-playbook）・**構造化ハンドオフ**（G-2）を導入済み。残る弱点は「評価ハーネス（G-6）」と各形式化の運用実績。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
+**総合：24.5 / 30（82%）** — Write戦略・Isolate・ルールベース検証は成熟。**Hooks 一式**（G-1・G-5）・**Generator-Evaluator の形式化**（G-3）・**マルチエージェント運用ルーティング**（05_multiagent-playbook）・**構造化ハンドオフ**（G-2）を導入済み。残る弱点は「評価ハーネス（G-6）」と各形式化の運用実績。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
 
 ---
 
@@ -52,8 +52,8 @@
   ✅ `specs/evaluation-rubric.md`（UI 品質基準＝段階評価）と ✅ `specs/sprint-contract.md`（完了基準＝二値の合意文書。ユーザ認証機能を正典例＝回帰チェックリストとして記載）を整備。いずれも CLAUDE.md のテスト方針・ディレクトリ構成から参照。
   残り：実スプリントでの運用実績（契約の事前合意 → Evaluator の全項目 Pass 確認 → rubric 反復採点）。
 
-- **G-4: ビジュアル検証を verify に統合**（領域9）
-  UI 変更時に Playwright MCP でスクリーンショット→マルチモーダル評価を回す。既存の `webapp-testing`/`material-design` の資産を流用。
+- **🟡 G-4（ルーティング形式化済み・運用実績待ち）: ビジュアル検証**（領域9）
+  発動条件は [07_verification-loop.md](./07_verification-loop.md) §2 に形式化（UI 新規/リデザイン時に Playwright スクショ＋rubric 採点。小修正には課さない＝過剰検証の回避）。残りは実際の UI 変更での運用実績。
 
 - **✅ G-5（完了・[docs/019](../019_posttooluse_lint_and_notify.md)）: PostToolUse フックで編集後 lint 自動化**（領域3/9）
   `Write|Edit` 後に JS/TS のみ eslint を実行し、指摘を stdout で Claude に返す（fast-fail）。あわせて共有 Notification 音（`notify.sh`）も導入。

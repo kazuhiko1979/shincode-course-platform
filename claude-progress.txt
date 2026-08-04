@@ -6,13 +6,15 @@
 - 2026-07-30: ハーネス Hooks 一式（#018/#019 = PR #15 ce8f5b2・PR #16 03860fb）
 - 2026-07-30: Generator-Evaluator 形式化（specs/sprint-contract・evaluation-rubric = PR #18 80d210a）
 - 2026-07-31: 認証単体テスト＋/goal 条件指針（#020 = PR #19 6fefa3f。npm test 11/11・verify/CI にゲート組み込み）
-- 2026-08-02: マルチエージェント運用ルーティング（docs/harness/05_multiagent-playbook.md）＋構造化ハンドオフ基盤（#021）を実装、/push-review の指摘（台帳の算術・日付・フック堅牢化）を反映
+- 2026-08-03: マルチエージェント運用＋構造化ハンドオフ基盤（#021 = PR #20 0dc5d51）
+- 2026-08-04: ツール設計（ACI）基準と監査台帳（#022 = docs/harness/06_tool-design.md）
+- 2026-08-04: 検証ループの形式化（#023 = docs/harness/07_verification-loop.md。3戦略ルーティング・検証の階段・過剰検証の回避）
 
 ## 現在の状態
-- 作業ブランチ feat/multiagent-and-handoff の #021 は /push-review 承認済み（APPROVED WITH NOTES）。マージ後に main へ反映。最新状態は必ず git log --oneline -5 / git status で確認すること
+- #022（ツール設計）・#023（検証ループ）まで実装済み（同一コミットに同梱）。最新状態は必ず git log --oneline -5 / git status で確認すること
 - 品質ゲート: npm run verify（lint→typecheck→test→build）exit 0・テスト 11/11（2026-08-02 実測）
 - 残チケット: 001 getClaims統一⚠️ ／ 017 公開前セキュリティバックログ 0/8
-- ハーネス成熟度: 24/30（80%）— docs/harness/02_maturity.md（2026-08-02 採点）
+- ハーネス成熟度: 24.5/30（82%）— docs/harness/02_maturity.md（2026-08-04 採点）。notion MCP の無効化を勧告（06_tool-design §2・人間の実施待ち）
 
 ## 次のアクション（優先順）
 1. 017 公開前セキュリティ/品質バックログの是正（8件）

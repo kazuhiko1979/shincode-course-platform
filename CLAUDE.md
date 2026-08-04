@@ -183,7 +183,11 @@ Conventional Commits 形式を使う：`<type>: <件名（日本語可）>`
 
 ### テスト方針
 
-単体テストは Node 組み込みの `node:test`（`npm test`・`test/` 配下・依存ゼロ）。UI/統合テスト基盤は未導入。以下を必ず行う：
+単体テストは Node 組み込みの `node:test`（`npm test`・`test/` 配下・依存ゼロ）。UI/統合テスト基盤は未導入。
+
+**検証の階段**（詳細・アンチパターンは [`docs/harness/07_verification-loop.md`](docs/harness/07_verification-loop.md)）：**まずルールベース**（verify/test/フック）、ルールで表現できない基準（見た目・UX・設計妥当性）だけビジュアル（Playwright スクショ）／LLM-as-Judge（rubric・reviewers）を追加。**変更に比例した必要十分な検証**にとどめ（docs 修正に rubric 全採点や追加レビュアーは不要。ただし **push 時の `/push-review` は常時必須**）、新規ルールはシンプルに導入して実測で精緻化する。
+
+以下を必ず行う：
 
 - コード変更後は `npm run lint` を通す（エラーは修正してからコミット）
 - `test/` にテストがある対象（`lib/auth.ts` の純関数等）を変更したら `npm test` を通す。**テストを通すためにテストファイルを書き換えたり、実装出力を期待値に貼り付けたりしない**（抜け道封じ。テスト側の変更が必要なら理由を明示して人間の承認を得る）
