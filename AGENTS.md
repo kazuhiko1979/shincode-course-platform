@@ -4,6 +4,13 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Claude Code / Codex CLI 共通運用
+
+- この `AGENTS.md` を両 CLI の共通規約の正典とする。CLI 固有の補足は `CLAUDE.md` と `.codex/` に置き、共通規約を複製しない。
+- backend（`app/**/actions.ts`、`lib/**/*.ts`、`middleware.ts`、`proxy.ts`）を変更する前に `.agents/rules/backend/patterns.md`、frontend（`app/**/*.tsx`、`components/**/*.tsx`）を変更する前に `.agents/rules/frontend/patterns.md` を読む。Claude Code では `.claude/rules/` の互換リンクから同じ本文が自動選択される。
+- 共通 Hook・Rules・Skills の正典は `.agents/`。`.claude/` と `.codex/` は CLI 差を吸収する薄いアダプターとして扱う。
+- 同じ作業ツリーで Claude Code と Codex を同時起動する場合、書き手は一方だけにする。両方で並行編集する場合は別ブランチ＋別 `git worktree` を使う。詳細は `docs/harness/08_dual-cli-playbook.md`。
+
 ## Review guidelines
 
 このリポジトリのコードレビュー基準。重要度順（Critical → High → Medium → Low）に、根拠とともに具体的な該当箇所（`file:line`）を挙げること。詳細な規約は `CLAUDE.md` を参照。
@@ -55,11 +62,22 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ---
 
+## Claude Code / Codex CLI 共通運用
+
+- 規約の正典は本ファイル。Claude Code は `CLAUDE.md` から import し、Codex は本ファイルを直接読む。
+- Hook・Rules・Skills の実体は `.agents/` が正典。`.claude/` は Claude Code 用アダプター、`.codex/` は Codex CLI 用アダプターとして扱い、共通本文を複製しない。
+- backend（`app/**/actions.ts`・`lib/**`）の変更前は `.agents/rules/backend/patterns.md`、frontend（`app/**/*.tsx`・`components/**/*.tsx`）の変更前は `.agents/rules/frontend/patterns.md` を読む。
+- Material Design / M3 の UI 作業では `.agents/skills/material-design/SKILL.md` を使う。
+- 同じ作業ツリーで Claude Code と Codex CLI を同時に使う場合、書き手は一方だけにし、他方は読み取り・レビュー担当にする。両方で編集する場合は別ブランチ＋別 `git worktree` を使う。
+- 会話履歴は同期されない。`docs/` チケット、Git diff、`claude-progress.txt` を CLI 間ハンドオフの正典にする。詳細は [`docs/harness/08_dual-cli-playbook.md`](docs/harness/08_dual-cli-playbook.md)。
+
+---
+
 ## エージェント作業の安全ルール（必須・人間/Claude/Codex 共通）
 
 AI エージェントが安全に開発するための行動規範。**このファイルが正典**で、`CLAUDE.md` からも `@import` される。以下は「レビュー基準」ではなく「作業手順の遵守事項」。迷ったら停止して人間に確認する。
 
-> **一部は決定論的に強制されている**：破滅的 `rm`・`git push --force`・`git add -A`/`.`・`.env` ステージ・Supabase MCP の書き込み等は、`.claude/settings.json` の **PreToolUse フック**（`.claude/hooks/validate-*.sh`）が `exit 2` で実際にブロックする（＝文章の「お願い」ではなく強制）。詳細と対象一覧は [`docs/018_pretooluse_guardrails.md`](docs/018_pretooluse_guardrails.md)。DB 書き込みの承認済み実行は `CLAUDE_ALLOW_DB_WRITE=1` を付ける。
+> **一部は決定論的に強制されている**：破滅的 `rm`・`git push --force`・`git add -A`/`.`・`.env` ステージ・Supabase MCP の書き込み等は、`.agents/hooks/` の共通 **PreToolUse フック**が `exit 2` で実際にブロックする（Claude は `.claude/settings.json`、Codex は `.codex/hooks.json` から配線）。詳細と対象一覧は [`docs/018_pretooluse_guardrails.md`](docs/018_pretooluse_guardrails.md)。DB 書き込みの承認済み実行は `CLAUDE_ALLOW_DB_WRITE=1` を付ける。
 
 ### 1. 変更禁止ゾーン（人間の明示承認なしに触らない）
 
@@ -68,7 +86,7 @@ AI エージェントが安全に開発するための行動規範。**このフ
 - **DB スキーマ / RLS / `SECURITY DEFINER` 関数**（`is_admin` / `admin_*` / `handle_new_user` など）。
 - **Supabase MCP のリモート書き込み**：`apply_migration` と、DDL/DML を伴う `execute_sql`（`INSERT`/`UPDATE`/`DELETE`/`ALTER`/`DROP`/`GRANT`/`REVOKE` 等）。読み取り（`SELECT`）・`list_*`・`get_advisors` は可。
 - **`next.config.ts` のセキュリティヘッダー**（HSTS / CSP / `frame-ancestors` / `X-Frame-Options` / Referrer-Policy / Permissions-Policy）の削除・緩和。
-- **レビュー機構・ハーネス強制系**：`.claude/agents/*`・`.claude/commands/*`・`.claude/agent-memory/*`・`.claude/hooks/*`・`.claude/settings.json`（チェック・ガードレールを弱める変更）。
+- **レビュー機構・ハーネス強制系**：`.agents/hooks/*`・`.agents/rules/*`・`.agents/skills/*`・`.claude/agents/*`・`.claude/commands/*`・`.claude/agent-memory/*`・`.claude/settings.json`・`.codex/hooks.json`・`.codex/config.toml`（チェック・ガードレールを弱める変更）。
 - **依存関係**：`package.json` への依存追加・削除・アップグレード（供給網・破壊的変更リスク）。
 
 ### 2. spec-first（勝手な仕様追加の禁止）
@@ -127,5 +145,7 @@ AI エージェント開発を一過性でなく **資産として蓄積・洗�
 - [`docs/harness/05_multiagent-playbook.md`](docs/harness/05_multiagent-playbook.md) — マルチエージェント運用（壁打ち既定・プロンプトの形で3パターンへ昇格・最小ツール・計画のメモリ保存）
 - [`docs/harness/06_tool-design.md`](docs/harness/06_tool-design.md) — ツール設計（ACI）基準と監査台帳（選択的実装・命名・エラー3点セット・3フェーズ改善）
 - [`docs/harness/07_verification-loop.md`](docs/harness/07_verification-loop.md) — 検証ループ（3戦略ルーティング・検証の階段・過剰検証の回避・シンプル→精緻化）
+- [`docs/harness/08_dual-cli-playbook.md`](docs/harness/08_dual-cli-playbook.md) — Claude Code / Codex CLI の共通資産・同時利用・worktree・ハンドオフ運用
+- [`evals/README.md`](evals/README.md) — 評価ハーネス（20タスク台帳 `evals/tasks.json`・Grader・pass@k・Regression ベースライン）
 
 > **設計哲学：AI の凹みに構造を、でっぱりは安心して任せられるように。モデルが進化しても、設計したハーネス構造は資産として永続する。**

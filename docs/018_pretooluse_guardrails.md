@@ -19,7 +19,7 @@
 | 一括ステージ | Bash | `git add -A`/`--all`/`git add .` | パス明示を強制 |
 | `.env` ステージ | Bash | `git add` の対象に `.env` を含む | シークレット混入防止 |
 | DB 書き込み | `mcp__supabase__apply_migration` | 常時 | 変更禁止ゾーン |
-| DB 書き込み | `mcp__supabase__execute_sql` | クエリが DDL/DML（INSERT/UPDATE/DELETE/ALTER/DROP/CREATE/TRUNCATE/GRANT/REVOKE/REPLACE）を含む | SELECT/list は許可。解析不能時は fail-closed でブロック |
+| DB 書き込み | `mcp__supabase__execute_sql` | クエリが DDL/DML・実行系（INSERT/UPDATE/DELETE/ALTER/DROP/CREATE/TRUNCATE/GRANT/REVOKE/REPLACE/MERGE/CALL/DO/COPY/COMMENT/REFRESH/REINDEX/CLUSTER/VACUUM）を含む | SELECT/list は許可。解析不能時は fail-closed でブロック |
 
 ### 承認済み例外（オーバーライド）
 

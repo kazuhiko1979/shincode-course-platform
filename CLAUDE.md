@@ -1,6 +1,7 @@
 @AGENTS.md
 
-> **ルールの読み込み方針**：`.claude/rules/backend/patterns.md`・`.claude/rules/frontend/patterns.md` は
+> **ルールの読み込み方針**：正典は `.agents/rules/`。`.claude/rules/backend/patterns.md`・`.claude/rules/frontend/patterns.md` は
+> 共通実体への互換リンクであり、
 > フロントマターの `paths:`（glob）による **path-specific rules**（Claude Code ネイティブ機能）。
 > 該当ファイルを操作する時だけ自動でコンテキストに読み込まれる（Select 戦略）。
 > `@import` で常時読み込みにはしない（二重ロード・コンテキスト浪費を避けるため）。
@@ -16,7 +17,7 @@
 
 ## セッション開始時の手順（毎回必ず実行・スキップ禁止）
 
-> **SessionStart フック**（`.claude/hooks/session-start.sh`）が `claude-progress.txt` と本手順を自動でコンテキストに注入する（決定論化）。注入が無い環境でも以下を手動で実行すること。
+> **SessionStart フック**（正典 `.agents/hooks/session-start.sh`）が `claude-progress.txt` と本手順を自動でコンテキストに注入する（決定論化）。注入が無い環境でも以下を手動で実行すること。
 
 1. `git log --oneline -5` と `git status` で直近の変更・未コミットを確認する
 2. `claude-progress.txt` を読んで前セッションの状況（完了・状態・次アクション）を把握する
@@ -249,4 +250,3 @@ Conventional Commits 形式を使う：`<type>: <件名（日本語可）>`
 - `specs/` — Generator-Evaluator の合意・評価文書（`sprint-contract.md`＝完了基準の事前合意・二値判定／`evaluation-rubric.md`＝フロントエンド UI の評価基準・段階評価）
 
 新しいルートは App Router 規約で `app/` 配下に追加する（`page.tsx`=ルート公開、`layout.tsx`=共有 UI、`route.ts`=外部 webhook / コールバック専用）。
-

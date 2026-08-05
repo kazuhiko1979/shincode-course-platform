@@ -15,7 +15,9 @@
 | [04_bootstrap-playbook.md](./04_bootstrap-playbook.md) | **起ち上げプレイブック**。新プロジェクトを AI エージェントと始める手順（安全の最小セット→仕様→PoC→issue駆動→ハーネスを育てる→Claude Code×Codex 運用） | 新しいプロジェクトを始める時 |
 | [05_multiagent-playbook.md](./05_multiagent-playbook.md) | **マルチエージェント運用**。壁打ちを既定に、プロンプトの形で3パターン（ファンアウト/パイプライン/オーケストレーター）へ昇格する判定表・ツール割り当て・計画のメモリ保存 | 委任・並列化する前に |
 | [06_tool-design.md](./06_tool-design.md) | **ツール設計（ACI）基準と監査台帳**。選択的実装（3〜5）・コンテキスト効率・命名・エラー3点セット・3フェーズ改善ループ | ツール/フック/スクリプト/MCP を足す・変える前に |
+| [../../evals/README.md](../../evals/README.md) | **評価ハーネス（実体は `/evals`）**。20タスク台帳・Grader 3種・pass@k・複利ループ | ハーネス変更の採否判断・退行チェック時 |
 | [07_verification-loop.md](./07_verification-loop.md) | **検証ループ**。3戦略（ルールベース→ビジュアル→LLM-as-Judge）のルーティング・変更種別ごとの検証の階段・過剰検証の回避・ルールはシンプル→実測→精緻化 | 検証方法を選ぶ時／新しいルールを足す前に |
+| [08_dual-cli-playbook.md](./08_dual-cli-playbook.md) | **Claude Code / Codex CLI デュアル運用**。共通資産、同時起動の境界、worktree、MCP・Hook の差分、ハンドオフ手順 | 2つの CLI を使い分ける時 |
 | [06_complete-guide-summary.md](./06_complete-guide-summary.md) | **原本PDFの統合要約**。全体の論旨を章順に再構成し、設計チェックリストまで一つの文書に集約 | 原本の全体像を短時間で把握したい時 |
 
 ## 使い方（このナレッジをどう回すか）

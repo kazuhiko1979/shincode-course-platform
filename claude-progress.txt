@@ -8,17 +8,21 @@
 - 2026-07-31: 認証単体テスト＋/goal 条件指針（#020 = PR #19 6fefa3f。npm test 11/11・verify/CI にゲート組み込み）
 - 2026-08-03: マルチエージェント運用＋構造化ハンドオフ基盤（#021 = PR #20 0dc5d51）
 - 2026-08-04: ツール設計（ACI）基準と監査台帳（#022 = docs/harness/06_tool-design.md）
-- 2026-08-04: 検証ループの形式化（#023 = docs/harness/07_verification-loop.md。3戦略ルーティング・検証の階段・過剰検証の回避）
+- 2026-08-04: 検証ループの形式化（#023 = PR #21 6d08a24）
+- 2026-08-04: 評価ハーネス種まき（#024 = evals/ 20タスク＋code-graded 9件中8件を少なくとも部分実測。G-6）
+- 2026-08-05: Claude Code / Codex CLI デュアル運用（#025 = `.agents/` 共通正典＋両CLI adapter＋運用ガイド）
+- 2026-08-05: Codex MCP に `openaiDeveloperDocs` と `chrome-devtools` を追加し、`codex mcp list/get` で enabled を確認
+- 2026-08-05: #024 grader を関数単位へ強化し、Supabase Hook の書き込み構文ブロックを拡張。grader/Hookテストと `npm run verify`（11/11・build）pass
 
 ## 現在の状態
-- #022（ツール設計）・#023（検証ループ）まで実装済み（同一コミットに同梱）。最新状態は必ず git log --oneline -5 / git status で確認すること
-- 品質ゲート: npm run verify（lint→typecheck→test→build）exit 0・テスト 11/11（2026-08-02 実測）
+- #023 まで main に反映済み（PR #21）。#024/#025 はローカル作業 — 最新状態は必ず git log --oneline -5 / git status で確認すること
+- 品質ゲート: npm run verify（lint→typecheck→test→build）exit 0・テスト 11/11（2026-08-05 実測）
 - 残チケット: 001 getClaims統一⚠️ ／ 017 公開前セキュリティバックログ 0/8
-- ハーネス成熟度: 24.5/30（82%）— docs/harness/02_maturity.md（2026-08-04 採点）。notion MCP の無効化を勧告（06_tool-design §2・人間の実施待ち）
+- ハーネス成熟度: 25.5/30（85%）— docs/harness/02_maturity.md（2026-08-04 採点）。notion MCP の無効化勧告は人間の実施待ち
 
 ## 次のアクション（優先順）
 1. 017 公開前セキュリティ/品質バックログの是正（8件）
 2. 次の機能開発で「sprint-contract 合意 → 実装 → 別エージェント検収」のパイプラインを実践（specs/ の運用実績づくり）
-3. G-6 評価ハーネスの種まき（20タスク＋pass@k）
+3. evals/ の初回実運転（user-request タスク1つを contract→実装→検収→pass@k 記録で通す）
 4. 抜け道封じの決定論化候補：test/**・feature_list.json・claude-progress.txt への PreToolUse ガード（現状は文章規約）
 5. テスト強化（スタブ引数アサート・DBエラー時 fail-closed の固定）
