@@ -15,8 +15,8 @@
 
 | 戦略 | ひとことで | 本プロジェクトの実物 |
 |---|---|---|
-| **Write** | 知識を外部ファイルに永続化 | `CLAUDE.md`・`AGENTS.md`・`docs/`・`.serena/memories` |
-| **Select** | 必要な時に必要な分だけ | `.claude/rules/*`・Skills・MCP |
+| **Write** | 知識を外部ファイルに永続化 | `AGENTS.md`・`docs/`・`.serena/memories`（Claude/Codex 共通） |
+| **Select** | 必要な時に必要な分だけ | `.agents/rules/*`・`.agents/skills/*`・MCP |
 | **Compress** | 重要判断は残し冗長は捨てる | ハーネス自動＋全リセット運用 |
 | **Isolate** | サブエージェントで分離・並列 | 3 reviewers＋`/push-review` |
 
@@ -37,11 +37,12 @@
 - 完璧でなく、**品質基準を満たす最小限の反復**で止める（最初の2〜3回で最大改善）。
 - **少コストで壊れたもの**より **適正コストで動くもの**。
 
-## 本プロジェクトの現在地（24.5/30・82%）
+## 本プロジェクトの現在地（25.5/30・85%）
 
 - **強い**：Write戦略・Isolate＋投票レビュー・ルールベース検証ゲート・**Hooks 一式（docs/018・019）**・**Generator-Evaluator の形式化（specs/）**・**マルチエージェント運用ルーティング（05_multiagent-playbook）**・**構造化ハンドオフ（claude-progress.txt＋feature_list.json＋SessionStart フック、docs/021）**。
-- **伸びしろ（凹み対策）**：①評価ハーネス（pass@k）②各形式化の運用実績づくり（ツール設計の基準は [06_tool-design](../harness/06_tool-design.md) 参照）。
-- **次の一手**：次の機能開発で「contract 合意→実装→別エージェント検収」のパイプラインを実践する。その先に G-6 評価ハーネス。
+- **伸びしろ（凹み対策）**：①各形式化の運用実績づくり（evals の pass@k 比較・contract 検収・rubric 採点の実運転）②G-4 ビジュアル検証。
+- **次の一手**：evals/tasks.json の user-request タスクを1つ選び、「contract 合意→実装→検収→pass@k 記録」を通しで実運転する（運用実績の初回）。
+- **CLI 運用**：`.agents/` を Hook/Rules/Skills の正典にし、Claude Code と Codex CLI が同じ安全境界・知識を参照する。会話は `docs/`・Git diff・`claude-progress.txt` で引き継ぐ（[08_dual-cli-playbook](./08_dual-cli-playbook.md)）。
 
 ## 今日から
 

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/validate-bash.sh\"",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.agents/hooks/validate-bash.sh\"",
             "timeout": 10
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/validate-supabase-write.sh\"",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.agents/hooks/validate-supabase-write.sh\"",
             "timeout": 10
           }
         ]
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/lint-on-save.sh\"",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.agents/hooks/lint-on-save.sh\"",
             "timeout": 30
           }
         ]
@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/notify.sh\"",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.agents/hooks/notify.sh\"",
             "async": true,
             "timeout": 10
           }
@@ -51,7 +51,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/session-start.sh\"",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.agents/hooks/session-start.sh\"",
             "timeout": 10
           }
         ]

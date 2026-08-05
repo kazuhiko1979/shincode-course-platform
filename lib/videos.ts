@@ -6,7 +6,7 @@ const VIDEO_COLUMNS = 'id, course_id, title, description, youtube_url, order, cr
 
 /**
  * 指定コースの動画一覧を order 昇順で取得する。
- * 公開データなので `use cache`。管理画面での変更は `revalidateTag('videos'|'videos-<courseId>')` で更新。
+ * 公開データなので `use cache`。管理画面での変更は `updateTag('videos'|'videos-<courseId>')` で更新。
  */
 export async function getVideos(courseId: string): Promise<Video[]> {
   'use cache'

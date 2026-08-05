@@ -7,7 +7,7 @@ const COURSE_COLUMNS = 'id, title, description, thumbnail_url, order, created_at
 /**
  * 公開コース一覧を order 昇順で取得する。
  * 全ユーザー共通の公開データなので `use cache` でキャッシュする。
- * 管理画面でコースを変更すると `revalidateTag('courses')` で更新される。
+ * 管理画面でコースを変更すると `updateTag('courses')` で更新される。
  */
 export async function getCourses(): Promise<Course[]> {
   'use cache'
@@ -111,7 +111,7 @@ export async function searchCoursesLite(
 
 /**
  * 単一コースを取得する。存在しない場合・ID が不正な場合は null を返す。
- * 公開データなので `use cache`。コース個別の変更は `revalidateTag('course-<id>')` で更新。
+ * 公開データなので `use cache`。コース個別の変更は `updateTag('course-<id>')` で更新。
  */
 export async function getCourse(id: string): Promise<Course | null> {
   'use cache'
