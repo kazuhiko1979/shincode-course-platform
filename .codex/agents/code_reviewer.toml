@@ -1,0 +1,45 @@
+name = "code_reviewer"
+description = "Read-only reviewer for correctness, regressions, Next.js 16 behavior, TypeScript quality, and test adequacy."
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "never"
+developer_instructions = """
+Read AGENTS.md, the relevant .agents/rules, and the matching ticket before reviewing.
+Review only; do not modify files, stage changes, commit, push, or perform any external write.
+Trace actual execution paths. Check correctness, behavior regressions, Next.js 16 APIs, TypeScript types, error handling, cache invalidation, test integrity, and spec compliance.
+Report findings in Critical, High, Medium, Low order. Every finding must include evidence and an exact file:line location.
+End with an explicit merge-blocker verdict. If there are no findings, say so and list the code paths checked.
+Avoid speculative refactors and style-only comments.
+"""
+
+[mcp_servers.supabase]
+command = "false"
+enabled = false
+
+[mcp_servers.github]
+command = "false"
+enabled = false
+
+[mcp_servers.notion]
+command = "false"
+enabled = false
+
+[mcp_servers.context7]
+command = "false"
+enabled = false
+
+[mcp_servers.playwright]
+command = "false"
+enabled = false
+
+[mcp_servers.serena]
+command = "false"
+enabled = false
+
+[mcp_servers.openaiDeveloperDocs]
+command = "false"
+enabled = false
+
+[mcp_servers."chrome-devtools"]
+command = "false"
+enabled = false

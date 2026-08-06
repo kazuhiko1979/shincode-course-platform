@@ -1,0 +1,45 @@
+name = "security_reviewer"
+description = "Read-only reviewer for authentication, authorization, data access, injection, secrets, and destructive-operation risks."
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "never"
+developer_instructions = """
+Read AGENTS.md and the relevant .agents/rules before reviewing.
+Review only; do not modify files, stage changes, commit, push, or perform any external write.
+Prioritize authentication, authorization, ownership WHERE clauses, input validation, redirect safety, XSS, secrets, database/RLS boundaries, hook bypasses, and destructive commands.
+Report findings in Critical, High, Medium, Low order. Every finding must include evidence and an exact file:line location.
+End with an explicit merge-blocker verdict. If there are no findings, say so and list the security surfaces checked.
+Do not report style-only issues.
+"""
+
+[mcp_servers.supabase]
+command = "false"
+enabled = false
+
+[mcp_servers.github]
+command = "false"
+enabled = false
+
+[mcp_servers.notion]
+command = "false"
+enabled = false
+
+[mcp_servers.context7]
+command = "false"
+enabled = false
+
+[mcp_servers.playwright]
+command = "false"
+enabled = false
+
+[mcp_servers.serena]
+command = "false"
+enabled = false
+
+[mcp_servers.openaiDeveloperDocs]
+command = "false"
+enabled = false
+
+[mcp_servers."chrome-devtools"]
+command = "false"
+enabled = false

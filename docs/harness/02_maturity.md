@@ -1,7 +1,7 @@
 # 本プロジェクトのハーネス成熟度アセスメント
 
 > 「[01_principles.md](./01_principles.md)」の枠組みで、本リポジトリの現状ハーネスを採点し、ギャップと導入候補を整理する。
-> 採点日：2026-08-05（#025 反映時点）。設計哲学＝**「凹みに構造を、でっぱりは安心して任せる」**（凹み対策がどれだけ構造化されているかを見る）。
+> 採点日：2026-08-06（#026 反映時点）。設計哲学＝**「凹みに構造を、でっぱりは安心して任せる」**（凹み対策がどれだけ構造化されているかを見る）。
 
 **凡例**：✅ 十分 / 🟡 部分的 / ⚠️ 不足 / ❌ 未着手 ・ スコアは 0–3。
 
@@ -14,13 +14,13 @@
 | 3 | Hooks（決定論的制御） | ✅ 3 | **Pre/Post/Notification/SessionStart すべて導入済み**：PreToolUse ガードレール（[docs/018](../018_pretooluse_guardrails.md)、危険操作を `exit 2` ブロック）＋ PostToolUse lint-on-save（[docs/019](../019_posttooluse_lint_and_notify.md)、編集後 eslint）＋ 共有 Notification 音（`notify.sh`）＋ SessionStart ハンドオフ注入（[docs/021](../021_long_session_handoff.md)）。実体は `.agents/hooks/`、Claude/Codex の両設定から参照 |
 | 4 | 設計パターン（ルーティング/ACI/投票） | ✅ 2.5 | Rules＝ルーティング✅、投票＝3視点レビュー✅（教材p62の実装そのもの）。ACIは外部MCP依存でカスタム最適化は限定的 |
 | 5 | Generator-Evaluator | 🟡 2.5 | reviewers が生成と分離した評価者として機能✅。**`specs/evaluation-rubric.md`（段階評価）と `specs/sprint-contract.md`（二値の完了基準・合意文書）を整備済み**。残りは実スプリントでの反復ループ運用実績 |
-| 6 | マルチエージェント | 🟡 2.5 | ファンアウト・ギャザー＝`/push-review`の3並列✅。**運用ルーティングを形式化**（[05_multiagent-playbook.md](./05_multiagent-playbook.md)＝壁打ち既定・プロンプトの形で3パターンへ昇格・最小ツール・計画のメモリ保存。CLAUDE.md に判定表を常時配線）。オーケストレーター・ワーカーの実運用実績が残り |
+| 6 | マルチエージェント | ✅ 3 | ファンアウト・ギャザー＝3並列レビュー✅。Claudeに加え、Codex専用の読み取り専用 `security_reviewer` / `code_reviewer` / `performance_reviewer` を `.codex/agents/` に定義し、出力形式・禁止操作・ツール境界を固定。運用ルーティングは [05_multiagent-playbook](./05_multiagent-playbook.md) に形式化 |
 | 7 | 長時間エージェント管理 | 🟡 2.5 | **構造化ハンドオフ導入済み**（[docs/021](../021_long_session_handoff.md)）：`claude-progress.txt`（引き継ぎノート）＋`feature_list.json`（passes のみ変更可の規約）＋**SessionStart フックで自動注入**（決定論化）。コンテキスト不安/肥大化/毒性の規律を CLAUDE.md に明文化。残りは実運用実績 |
 | 8 | ツール設計（ACI/選択的実装） | 🟡 2.5 | **ACI 基準と監査台帳を形式化**（[06_tool-design.md](./06_tool-design.md)＝選択的実装3〜5・命名・エラー3点セット・3フェーズ改善・運用チェックリスト。reviewers は5ツール適合、notion 削減を勧告）。カスタム MCP は無し（必要になるまで作らない＝YAGNI） |
 | 9 | 検証ループ | 🟡 2.5 | **ルールベースは強い**（`verify`＋CI＋lint-on-save）✅。**3戦略のルーティングと「検証の階段」を形式化**（[07_verification-loop.md](./07_verification-loop.md)＝まずルールベース・過剰検証の回避・シンプル→実測→精緻化。CLAUDE.md テスト方針に要約配線）。残りはビジュアル/rubric 採点の運用実績 |
-| 10 | 評価ハーネス（Tasks/Graders/pass@k） | 🟡 1.5 | **種まき完了**（[docs/024](../024_eval_harness.md)＝`evals/tasks.json` に20タスク：回帰6・要求6・エッジ6・難題2。Grader 3種・pass@k プロトコル・複利ループを README に定義。**code-graded 9件中8件を少なくとも部分実測**（pass 7 / partial 1 / not_run 1）、Grader検証で偽陽性を精緻化）。残りは model/human タスクの初回実行と pass@k 運用実績 |
+| 10 | 評価ハーネス（Tasks/Graders/pass@k） | 🟡 2.5 | 20タスクとGraderに加え、基準コミットで未実装のuser-request U9を独立worktreeでk=3実運転し、固定grader、trial patch/report、`pass@3 = 100%` / `pass^3 = 100%`を[Git管理のoutcome](../../evals/outcomes/U9-admin-course-duplicate-2026-08-06.md)へ記録。残りは複数タスクへの拡張 |
 
-**総合：25.5 / 30（85%）** — Write戦略・Isolate・ルールベース検証は成熟。**Hooks 一式**（G-1・G-5）・**Generator-Evaluator の形式化**（G-3）・**マルチエージェント運用ルーティング**（05_multiagent-playbook）・**構造化ハンドオフ**（G-2）を導入済み。残る弱点は「評価ハーネス（G-6）」と各形式化の運用実績。いずれも AI の「凹み（苦手）」に構造を与える部分で、ここを補強すると資産価値が伸びる。
+**総合：27 / 30（90%）** — Codex専用の読み取り専用reviewer 3ロール、秘密値を出さないdoctor、user-request k=3の初回実運転を追加。初回の評価インフラ問題も記録し、永続worktreeへ修正後に3/3 Passを確定した。次の焦点は複数タスクへの評価拡張と、実スプリントでのGenerator-Evaluator反復実績。
 
 ---
 

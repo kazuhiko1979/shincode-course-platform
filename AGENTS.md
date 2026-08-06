@@ -70,6 +70,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Material Design / M3 の UI 作業では `.agents/skills/material-design/SKILL.md` を使う。
 - 同じ作業ツリーで Claude Code と Codex CLI を同時に使う場合、書き手は一方だけにし、他方は読み取り・レビュー担当にする。両方で編集する場合は別ブランチ＋別 `git worktree` を使う。
 - 会話履歴は同期されない。`docs/` チケット、Git diff、`claude-progress.txt` を CLI 間ハンドオフの正典にする。詳細は [`docs/harness/08_dual-cli-playbook.md`](docs/harness/08_dual-cli-playbook.md)。
+- Codex の push 前レビューは `.codex/agents/` の `security_reviewer`・`code_reviewer`・`performance_reviewer` を並列起動し、3者の完了を待って統合する。reviewer は読み取り専用で、変更や外部書き込みを行わない。
+- Codex 環境の診断は `bash .agents/scripts/codex-doctor.sh` を使う。診断出力へ設定値・トークン・URLを出さない。
 
 ---
 
