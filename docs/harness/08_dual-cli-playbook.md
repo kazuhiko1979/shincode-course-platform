@@ -71,3 +71,23 @@ codex mcp list
 ## Hook 変更時の検証
 
 `.agents/hooks/` は両 CLI に影響するため、変更前に人間承認を得る。変更後は Claude 形式と Codex 形式の JSON をそれぞれ pipe テストし、設定 JSON/TOML、symlink、`npm run verify` まで確認する。
+
+## Codex reviewer
+
+Codex は `.codex/agents/` の次の読み取り専用ロールを使う。
+
+| ロール | 主な観点 |
+|---|---|
+| `security_reviewer` | 認証・認可・所有権・入力・秘密情報・Hook迂回 |
+| `code_reviewer` | 正確性・Next.js 16・型・回帰・テスト・仕様整合 |
+| `performance_reviewer` | N+1・並列性・キャッシュ・描画・Hook負荷・運用信頼性 |
+
+push 前は3者を並列起動し、Critical → Low、`file:line`、mergeブロッカー有無を統合する。各ロールは `sandbox_mode = "read-only"` で、Supabase / GitHub / Notion MCPを無効化する。
+
+## Codex doctor
+
+```bash
+bash .agents/scripts/codex-doctor.sh
+```
+
+Node、Codex strict config、Hook JSON、共有symlink、reviewer、permissions、MCP名、通知、status lineを読み取り専用で診断する。値・URL・トークンは表示せず、必須項目が欠けると非0終了する。Hook設定変更後の対話的trustだけは `/hooks` で確認する。
