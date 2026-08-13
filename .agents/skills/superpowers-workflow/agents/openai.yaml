@@ -1,0 +1,6 @@
+interface:
+  display_name: "Superpowers Workflow"
+  short_description: "仕様駆動・TDD・レビュー・検証の共通開発フロー"
+  default_prompt: "Use $superpowers-workflow to execute this development task with specification-first planning, TDD, review, and validation."
+policy:
+  allow_implicit_invocation: true
