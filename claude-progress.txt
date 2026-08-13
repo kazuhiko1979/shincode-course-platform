@@ -14,6 +14,7 @@
 - 2026-08-05: Codex MCP に `openaiDeveloperDocs` と `chrome-devtools` を追加し、`codex mcp list/get` で enabled を確認
 - 2026-08-05: #024 grader を関数単位へ強化し、Supabase Hook の書き込み構文ブロックを拡張。grader/Hookテストと `npm run verify`（11/11・build）pass
 - 2026-08-06: #026 Codex reviewer 3ロール、秘密値非表示doctor、未実装U9のk=3評価を完成。U9は3/3 Pass、pass@3/pass^3=100%、最終3観点レビューはブロッカーなし
+- 2026-08-06: #027 プロジェクト共通 `grill-me` Skill を `.agents/skills/` に追加し、Claude互換リンクと形式検証を完了
 
 ## 現在の状態
 - #025 まで main に反映済み（PR #22）。#026 は `agent/codex-harness-90` で公開準備中 — 最新状態は必ず git log --oneline -5 / git status で確認すること

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill Me"
+  short_description: "要件の曖昧さと抜け漏れを一問ずつ丁寧に洗い出す対話スキル"
+  default_prompt: "grill-meモードで、実装前に要件・リスク・受け入れ条件を一つずつ確認してください。"

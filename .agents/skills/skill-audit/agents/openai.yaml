@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Audit"
+  short_description: "Audit repository skills and security risks"
+  default_prompt: "Use $skill-audit to audit all repository SKILL.md files and report validation, duplication, and security-scan status."

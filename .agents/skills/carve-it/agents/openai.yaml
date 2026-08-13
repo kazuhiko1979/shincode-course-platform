@@ -1,0 +1,4 @@
+interface:
+  display_name: "Carve It"
+  short_description: "大きな変更を薄切りしてレビュー可能なコミットへ分割"
+  default_prompt: "Use $carve-it to split this large change into small, independently reviewable commits."

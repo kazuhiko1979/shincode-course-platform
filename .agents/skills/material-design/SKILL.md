@@ -1,13 +1,11 @@
 ---
 name: material-design
-description: >-
-  Google Material Design 3（Material You）に準拠した UI を、このプロジェクトのスタック
-  （Next.js 16 / React 19 / Tailwind CSS v4）で作るためのスキル。Material Design・M3・
-  マテリアル・Material You に沿った画面／コンポーネント／テーマを新規作成・リデザインするとき、
-  また「マテリアルっぽく」「Google 風の UI」「Material のボタン/カード/入力欄」といった依頼のときは、
-  たとえ "Material Design" と明示されていなくても必ずこのスキルを使うこと。M3 のカラーロール・
-  タイポグラフィスケール・エレベーション・シェイプ・ステートレイヤーを Tailwind v4 の `@theme` に
-  落とし込み、一貫した Material なコンポーネントを生成する。
+description: Use when google Material Design 3（Material You）に準拠した UI
+  を、このプロジェクトのスタック （Next.js 16 / React 19 / Tailwind CSS v4）で作るためのスキル。Material
+  Design・M3・ マテリアル・Material You に沿った画面／コンポーネント／テーマを新規作成・リデザインするとき、
+  また「マテリアルっぽく」「Google 風の UI」「Material のボタン/カード/入力欄」といった依頼のときは、 たとえ "Material
+  Design" と明示されていなくても必ずこのスキルを使うこと。M3 のカラーロール・ タイポグラフィスケール・エレベーション・シェイプ・ステートレイヤーを
+  Tailwind v4 の `@theme` に 落とし込み、一貫した Material なコンポーネントを生成する。
 ---
 
 # Material Design 3 UI（Next.js + Tailwind v4）

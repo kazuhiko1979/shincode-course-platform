@@ -10,6 +10,18 @@
 dir="${CLAUDE_PROJECT_DIR:-${CODEX_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}}"
 cd "$dir" 2>/dev/null || exit 0
 
+# Periodically smoke-test project-local Claude/Codex wiring. Healthy checks are
+# silent; failures are injected into the session context for immediate action.
+HARNESS_CHECKER="$dir/.agents/scripts/check-agent-harness.sh"
+if [ -x "$HARNESS_CHECKER" ]; then
+  harness_check_output=$("$HARNESS_CHECKER" --project "$dir" --quiet 2>&1)
+  harness_check_status=$?
+  if [ "$harness_check_status" -ne 0 ]; then
+    echo "⚠️ Claude/Codex harness 発動チェックに失敗しました。"
+    echo "$harness_check_output"
+  fi
+fi
+
 NONCE="HANDOFF-$$-$RANDOM"
 
 echo "=== セッション・スタートアップ（SessionStart hook / docs/021） ==="
