@@ -28,7 +28,9 @@
 .mcp.json
 
 # Serena MCP internal data
-.serena/
+.serena/cache/
+.serena/logs/
+.serena/project.local.yml
 
 # Windows / WSL download metadata
 *:Zone.Identifier
@@ -51,3 +53,11 @@ next-env.d.ts
 
 # source material (large binaries kept locally, not tracked)
 docs/*.pdf
+
+# --- agent-os linkage: LOCAL ONLY / never push OS info ---
+.agent
+.agent-os/
+*.generated.md
+.agent-os.lock
+agent-bootstrap.sh
+.agent-stack.json

@@ -1,0 +1,1 @@
+Next.js、TypeScript、Node.js。Serenaはtypescript/bash/json/yamlを索引化する。

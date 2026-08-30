@@ -1,0 +1,7 @@
+name: shincode-course-platform
+purpose: ""
+stacks: [node]
+commands:
+  test: "npm test"
+  lint: "npm run lint"
+  build: "npm run build"
