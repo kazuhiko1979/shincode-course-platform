@@ -28,7 +28,9 @@
 .mcp.json
 
 # Serena MCP internal data
-.serena/
+.serena/cache/
+.serena/logs/
+.serena/project.local.yml
 
 # Windows / WSL download metadata
 *:Zone.Identifier

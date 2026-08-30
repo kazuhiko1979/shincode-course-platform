@@ -1,0 +1,1 @@
+npm run dev で開発サーバーを起動し、http://localhost:3000 を確認する。利用可能な追加scriptsは package.json を確認する。
